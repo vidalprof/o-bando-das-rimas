@@ -1,0 +1,1833 @@
+<!DOCTYPE html>
+<html lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>O Bando das Rimas — 1º ano</title>
+<meta name="description" content="Dez folhas interativas de rima para o 1º ano: julgar se rima, achar a que rima, pintar, a pegadinha, circular, arrastar, ligar, completar a parlenda, escrever e montar o mural.">
+<!-- ============================================================
+     O BANDO DAS RIMAS — alfabetizacao, 1o ano (consciencia fonologica)
+     LIVRO DE FOLHAS INTERATIVAS, 10 folhas.
+
+     ⭐ NASCEU DO METODO NOVO (Marcos, set/2026): *"criar sequencias didaticas
+     de alfabetizacao com essas atividades da internet, dando a interatividade
+     que elas pedem"* e *"pode ser em folhas soltas; com elas sera montada a
+     sequencia didatica — o pedagogo consegue"*.
+
+     ENTAO CADA FOLHA DAQUI VEIO DE UMA FOLHA REAL DE PROFESSOR, e e FIEL a ela:
+     as mesmas palavras, os mesmos distratores, o mesmo comando impresso. As
+     folhas estao em `_sequencias/folhas/` (d06, d08, d17, d18, d24) e os itens
+     em `_sequencias/POTE-RIMA.md`, com cada correcao justificada.
+     O que muda e so o GESTO — a folha foi feita para o papel, e transpor direto
+     daria "papel na tela", que e pior que papel.
+
+     ⭐ POR QUE RIMA, E POR QUE ELA VEM PRIMEIRO. O parecer pedagogico da Fabrica
+     de Palavras achou este buraco: o objetivo F do curriculo de Blumenau para o
+     1o ano — *"recitar parlendas, quadras, quadrinhas, trava-linguas...
+     observando as RIMAS"* — nao estava em folha nenhuma. E na consciencia
+     fonologica a rima e o degrau ANTERIOR a silaba: unidade grande antes da
+     pequena. Ela e a porta de entrada, e faltava.
+
+     A ESCADA (da mais facil para a mais dificil, nao a ordem das folhas):
+       1 julgar se rima  →  2 achar entre tres  →  3 pintar a palavra escrita
+       →  4 a PEGADINHA (comeca igual, nao rima)  →  5 circular as duas
+       →  6 arrastar  →  7 ligar  →  8 completar a parlenda (objetivo F puro)
+       →  9 escrever  →  10 montar o proprio mural.
+
+     ARTE: 56 figuras — 37 RECORTADAS das proprias folhas de professor (prefixo
+     `al2_` no banco) e 19 REAPROVEITADAS do banco. Nenhuma imagem gerada.
+     ES5 puro, um arquivo, sem biblioteca. NAO usa o motor (folha viva).
+     ============================================================ -->
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%}
+body{font-family:"Segoe UI",Arial,sans-serif;background:#eef1f7;color:#1e2334;padding-bottom:160px}
+#topo{position:-webkit-sticky;position:sticky;top:0;z-index:20;background:#fff;border-bottom:3px solid #6d5ae6;
+  box-shadow:0 2px 14px rgba(40,30,90,.13);padding:8px 10px;display:flex;align-items:center;gap:10px;max-width:880px;margin:0 auto}
+#topo .tit{font-weight:800;font-size:15px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog{height:12px;background:#e6e6f4;border-radius:8px;overflow:hidden;flex:1;min-width:60px;max-width:200px}
+.prog i{display:block;height:100%;width:0;background:#6d5ae6;border-radius:8px;-webkit-transition:width .5s;transition:width .5s}
+.pg{font-weight:800;font-size:14px;color:#5b4fc4;white-space:nowrap}
+button{font-family:inherit;cursor:pointer}
+.bt{min-width:48px;min-height:48px;border:0;border-radius:16px;background:#6d5ae6;color:#fff;font-weight:800;font-size:17px;
+  padding:10px 18px;box-shadow:0 4px 0 #4c3cbb;-webkit-transition:transform .08s;transition:transform .08s}
+.bt:active{transform:translateY(3px);box-shadow:0 1px 0 #4c3cbb}
+.bt[disabled]{opacity:.45;cursor:default;box-shadow:none}
+.bt.cinza{background:#e4e6f2;color:#4a4f66;box-shadow:0 4px 0 #c3c7dc}
+.bt.verde{background:#15a34a;box-shadow:0 4px 0 #0d7736}
+.zap{width:42px;height:42px;border-radius:50%;border:0;background:#6d5ae6;box-shadow:0 3px 0 #4c3cbb;
+  display:inline-flex;align-items:center;justify-content:center;padding:0;flex:none}
+.zap svg{width:22px;height:22px;fill:#fff}
+.zap.off{background:#b9bcd0;box-shadow:0 3px 0 #9599b3}
+.zap.ouvir{background:#fff;box-shadow:0 3px 0 #cdd0e4;border:2px solid #6d5ae6}
+.zap.ouvir svg{fill:#6d5ae6}
+.zap.ouvir.tocando{-webkit-animation:pulsa 1s infinite;animation:pulsa 1s infinite}
+@-webkit-keyframes pulsa{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+@keyframes pulsa{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+
+#livro{max-width:880px;margin:12px auto 0;padding:0 10px}
+.pagina{position:relative;background:#fff;border-radius:22px;box-shadow:0 10px 34px rgba(35,25,80,.16);display:none;overflow:hidden;padding:0 0 20px}
+.pagina.viva{display:block;-webkit-animation:entra .35s ease-out;animation:entra .35s ease-out}
+@-webkit-keyframes entra{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes entra{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.faixa{background:#6d5ae6;color:#fff;padding:15px 18px 13px;display:flex;align-items:center;gap:12px}
+.faixa h2{margin:0;font-size:clamp(17px,4.4vw,25px);letter-spacing:.4px;text-transform:uppercase;flex:1;line-height:1.1}
+.faixa .num{background:#fff;color:#6d5ae6;font-weight:900;border-radius:50%;width:36px;height:36px;display:flex;
+  align-items:center;justify-content:center;font-size:18px;flex:none}
+.pagina.c1 .faixa{background:#e0562f}.pagina.c1 .faixa .num{color:#e0562f}
+.pagina.c2 .faixa{background:#1179bf}.pagina.c2 .faixa .num{color:#1179bf}
+.pagina.c3 .faixa{background:#15a34a}.pagina.c3 .faixa .num{color:#15a34a}
+.pagina.c4 .faixa{background:#b0308f}.pagina.c4 .faixa .num{color:#b0308f}
+.pagina.c5 .faixa{background:#c98a06}.pagina.c5 .faixa .num{color:#c98a06}
+.enun{margin:14px 16px 4px;font-size:clamp(15px,3.9vw,19px);font-weight:700;line-height:1.35}
+.enun b{color:#6d5ae6}
+
+/* =========================================================================
+   AS PEÇAS DO BANDO DAS RIMAS
+   ⚠️ Cada classe daqui nasceu de uma folha impressa. O leiaute copia o que o
+   papel faz — figura-chave grande de um lado, opções do outro — porque é assim
+   que a criança já viu a folha na mão do professor.
+   ⚠️ E TUDO O QUE SE TOCA TEM 44 px NO MÍNIMO (regra do 1º e 2º ano). Dedo de
+   seis anos não acerta alvo pequeno, e alvo pequeno vira erro que não é erro.
+   ========================================================================= */
+
+/* folha 1 — as duas palavras lado a lado, com o "e" no meio */
+.parrima{display:flex;align-items:center;justify-content:center;gap:clamp(8px,4vw,26px);
+  flex-wrap:nowrap;margin:6px 0 12px}
+.parrima .eou{font-weight:800;color:#6d5ae6;font-size:clamp(15px,4vw,20px);flex:none}
+.figsom{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
+.figsom .fig{height:clamp(70px,17vw,104px)}
+.figsom .rot{font-weight:800;color:#2c3350;font-size:clamp(13px,3.4vw,16px);letter-spacing:.5px}
+
+/* a chamada da folha: "PASSARINHO rima com:" */
+.chamrima{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:10px}
+.chamrima .figgrande{display:block;width:auto;height:clamp(84px,21vw,128px);max-width:100%;
+  margin:0 auto;object-fit:contain}
+.chamlin{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
+.chamlin b{font-size:clamp(15px,4vw,19px);color:#2c3350;letter-spacing:.5px}
+
+/* as opções COM figura (folhas 2, 4 e 6) */
+.op.figbt{display:flex;flex-direction:column;align-items:center;gap:3px;
+  min-width:96px;min-height:112px;padding:8px 10px}
+.op.figbt .figop{display:block;width:auto;height:clamp(56px,14vw,80px);max-width:100%;object-fit:contain}
+.rotop{font-weight:800;font-size:clamp(11px,2.9vw,13px);color:#2c3350;letter-spacing:.4px;
+  line-height:1.1;word-break:break-word}
+
+/* as opções em PALAVRA, que a folha 08 imprime — e que se PINTAM */
+.op.pintavel{min-width:132px;min-height:52px;font-size:clamp(14px,3.6vw,17px);font-weight:800;
+  letter-spacing:.6px}
+
+/* folha 5 — a grade que se circula */
+.gradecirc{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;
+  margin:8px 0 4px;touch-action:none}
+@media (max-width:430px){.gradecirc{grid-template-columns:repeat(2,1fr)}}
+.figcirc{display:flex;flex-direction:column;align-items:center;gap:3px;
+  min-height:104px;padding:8px 4px;border:3px solid #e4e7f6;border-radius:16px;background:#fff;
+  cursor:pointer;-webkit-transition:border-color .18s,background .18s;transition:border-color .18s,background .18s}
+.figcirc .figop{display:block;width:auto;height:clamp(50px,13vw,72px);max-width:100%;object-fit:contain}
+.figcirc.marcada{border-color:#f59e0b;background:#fff7e6}
+
+/* folha 6 — o alvo para onde a peça é puxada */
+.alvorima{display:flex;flex-direction:column;align-items:center;gap:5px;margin-bottom:10px;
+  padding:10px;border:3px dashed #c9cdec;border-radius:20px;background:#fff}
+.alvorima.alvo{border-color:#6d5ae6;background:#f2efff}
+.alvorima .figgrande{display:block;width:auto;height:clamp(80px,20vw,120px);max-width:100%;object-fit:contain}
+
+/* folha 8 — a parlenda e a lacuna que se preenche */
+.parlenda{font-size:clamp(16px,4.2vw,21px);font-weight:700;color:#2c3350;line-height:1.5;
+  text-align:center;margin:4px 6px 8px}
+.lacuna{display:inline-block;min-width:74px;padding:1px 10px;border-bottom:4px solid #6d5ae6;
+  color:#6d5ae6;font-weight:900;text-align:center}
+.lacuna.cheia{border-bottom-color:#1f9d55;color:#1f9d55;background:#eafaf0;border-radius:8px 8px 0 0}
+
+/* folha 9 — a caixa de escrever é LARGA (palavra inteira, não sílaba) */
+.sq.larga{min-width:168px;padding:0 12px}
+
+/* folha 10 — o mural que a criança monta, e que vai para o relatório */
+.mural{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:8px 10px}
+.cartaorima{display:flex;align-items:center;gap:4px;min-height:96px;padding:10px 12px;
+  border:3px solid #d9ddf2;border-radius:20px;background:#fff;cursor:pointer;
+  -webkit-transition:transform .18s,border-color .18s,background .18s;
+  transition:transform .18s,border-color .18s,background .18s}
+.cartaorima .figop{display:block;width:auto;height:clamp(48px,12vw,66px);max-width:100%;object-fit:contain}
+.cartaorima .mais{font-weight:900;color:#6d5ae6;font-size:18px;padding:0 2px}
+.cartaorima.escolhido{border-color:#1f9d55;background:#eafaf0;-webkit-transform:scale(1.03);transform:scale(1.03)}
+.cartaorima:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+
+.item{margin:12px 14px;padding:14px;border:2px solid #eceefa;border-radius:20px;background:#fbfbff}
+.item.feito{border-color:#bfe6ce;background:#f3fcf6}
+.item .n{font-weight:900;color:#9aa0bd;font-size:15px;margin-right:8px}
+/* ⚠️ A FIGURA TEM ALTURA FIXA, E ISSO NÃO É ENFEITE (set/2026). Antes era
+   `height:auto`: cada figura entrava no seu tamanho natural — a casa com 230 px
+   e a bola com 90 — e, como `display:block` ignora o `text-align:center` do pai,
+   todas encostavam na ESQUERDA. O item ficava com um buraco branco do lado
+   direito e as folhas, desiguais. Altura igual + `margin:auto` resolve as duas
+   coisas de uma vez: peso visual igual e figura no meio. */
+.fig{display:block;width:auto;height:clamp(76px,19vw,116px);max-width:100%;
+  margin:2px auto 6px;object-fit:contain;image-rendering:auto}
+.figbt{border:0;background:none;padding:4px;border-radius:16px;min-width:48px;min-height:48px}
+/* ⚠️ O ALTO-FALANTE É DESENHADO EM CSS — caixinha + triângulo + duas ondas de
+   borda arredondada. Nada de emoji (vira quadradinho nos PCs da escola) e nada
+   de SVG (ordem do Marcos, set/2026). */
+.som{position:relative;width:46px;height:46px;min-width:46px;border:3px solid #6d5ae6;
+  border-radius:50%;background:#f2efff;padding:0;cursor:pointer;flex:none}
+.som:active{-webkit-transform:scale(.93);transform:scale(.93)}
+.som .cone{position:absolute;left:12px;top:17px;width:7px;height:10px;background:#4b3fb0;
+  border-radius:2px 0 0 2px}
+.som .cone:after{content:"";position:absolute;left:6px;top:-6px;width:0;height:0;
+  border-top:11px solid transparent;border-bottom:11px solid transparent;
+  border-right:11px solid #4b3fb0}
+.som .onda{position:absolute;border:3px solid #4b3fb0;border-left-color:transparent;
+  border-top-color:transparent;border-bottom-color:transparent;border-radius:50%}
+.som .o1{left:26px;top:16px;width:8px;height:12px}
+.som .o2{left:29px;top:11px;width:13px;height:22px;opacity:.65}
+.enunlin{display:flex;align-items:center;gap:10px;margin:0 2px}
+.enunlin .enun{flex:1;min-width:0}
+.palin{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:2px}
+.pal{font-weight:900;letter-spacing:2px;font-size:clamp(22px,6vw,34px);color:#1e2334}
+
+/* fileira genérica de opções */
+.ops{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px}
+.op{min-width:64px;min-height:56px;border:3px solid #d9ddf2;border-radius:16px;background:#fff;color:#1e2334;
+  font-weight:900;font-size:22px;padding:8px 14px;-webkit-transition:transform .1s;transition:transform .1s}
+.op:active{transform:scale(.94)}
+.op.certa{border-color:#15a34a;background:#e7f8ee;color:#0d7736}
+.op.erro{border-color:#e0562f;background:#fdeee9;-webkit-animation:treme .4s;animation:treme .4s}
+@-webkit-keyframes treme{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes treme{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+/* o estojo de canetinhas da folha 5 */
+.estojo{display:flex;align-items:center;gap:10px;justify-content:center;flex-wrap:wrap;margin:8px 0 4px}
+.estojo .rot{font-weight:800;color:#5b4fc4;font-size:14px}
+.lapis{width:44px;height:44px;border:4px solid #fff;border-radius:50%;padding:0;cursor:pointer;
+  box-shadow:0 2px 8px rgba(35,25,80,.22);-webkit-transition:transform .12s;transition:transform .12s}
+.lapis.esc{-webkit-transform:scale(1.18);transform:scale(1.18);box-shadow:0 0 0 4px rgba(60,50,120,.28)}
+.op.pinta{-webkit-transition:background .18s,border-color .18s,color .18s;
+  transition:background .18s,border-color .18s,color .18s}
+.op.fig{padding:6px;min-width:96px}
+.op.fig img{width:88px;height:88px;object-fit:contain;display:block}
+
+/* 1 — a letra escondida */
+.escondida{display:flex;align-items:center;justify-content:center;gap:6px;flex-wrap:wrap;margin:10px 0}
+.escondida .lt{font-weight:900;font-size:clamp(26px,7vw,40px);letter-spacing:2px}
+.escondida .buraco{width:52px;height:56px;border-bottom:5px solid #6d5ae6;display:inline-flex;align-items:center;
+  justify-content:center;background:#f2efff;border-radius:10px 10px 0 0;font-weight:900;font-size:34px;color:#6d5ae6}
+/* a fila do alfabeto usa o mesmo visual da letra escondida */
+.filalfa{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:10px 0}
+.filalfa .lt{font-weight:900;font-size:clamp(26px,7vw,40px);letter-spacing:2px;color:#3b4064}
+.filalfa .buraco{width:52px;height:56px;border-bottom:5px solid #6d5ae6;display:inline-flex;
+  align-items:center;justify-content:center;background:#f2efff;border-radius:10px 10px 0 0;
+  font-weight:900;font-size:34px;color:#6d5ae6}
+.filalfa .buraco.ok{background:#e7f8ee;border-color:#15a34a;color:#0d7736}
+.filalfa .buraco.indo{color:transparent}
+.filalfa.completa .lt,.filalfa.completa .buraco{-webkit-animation:pulo .42s ease;animation:pulo .42s ease}
+.escondida .buraco.ok{background:#e7f8ee;border-color:#15a34a;color:#0d7736}
+.escondida .buraco.perto,.filalfa .buraco.perto{background:#e7f8ee;border-color:#15a34a;
+  -webkit-transform:scale(1.12);transform:scale(1.12)}
+/* o voo da letra até o buraco (ver voaLetra no folhas.js) */
+.escondida .buraco.indo{color:transparent}
+.voa{position:fixed;z-index:60;display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:30px;color:#0d7736;background:#e7f8ee;border:3px solid #15a34a;
+  border-radius:14px;pointer-events:none;-webkit-transition:-webkit-transform .5s cubic-bezier(.2,.9,.25,1);
+  transition:transform .5s cubic-bezier(.2,.9,.25,1);box-shadow:0 8px 20px rgba(21,163,74,.35)}
+@-webkit-keyframes pulo{0%{-webkit-transform:translateY(0)}40%{-webkit-transform:translateY(-9px)}100%{-webkit-transform:translateY(0)}}
+@keyframes pulo{0%{transform:translateY(0)}40%{transform:translateY(-9px)}100%{transform:translateY(0)}}
+.escondida.completa .lt,.escondida.completa .buraco{-webkit-animation:pulo .42s ease;animation:pulo .42s ease}
+.escondida.completa .lt:nth-child(2),.escondida.completa .buraco:nth-child(2){-webkit-animation-delay:.06s;animation-delay:.06s}
+.escondida.completa .lt:nth-child(3),.escondida.completa .buraco:nth-child(3){-webkit-animation-delay:.12s;animation-delay:.12s}
+.escondida.completa .lt:nth-child(4),.escondida.completa .buraco:nth-child(4){-webkit-animation-delay:.18s;animation-delay:.18s}
+.escondida.completa .lt:nth-child(5),.escondida.completa .buraco:nth-child(5){-webkit-animation-delay:.24s;animation-delay:.24s}
+.escondida.completa .lt:nth-child(6),.escondida.completa .buraco:nth-child(6){-webkit-animation-delay:.3s;animation-delay:.3s}
+.escondida.completa .lt:nth-child(7),.escondida.completa .buraco:nth-child(7){-webkit-animation-delay:.36s;animation-delay:.36s}
+@media (prefers-reduced-motion: reduce){
+  .voa{-webkit-transition:none;transition:none}
+  .escondida.completa .lt,.escondida.completa .buraco{-webkit-animation:none;animation:none}
+}
+
+/* 2 — bater a palavra */
+.bater{display:flex;flex-direction:column;align-items:center;gap:10px}
+.icb{width:34px;height:34px;object-fit:contain;vertical-align:middle;margin-right:8px;display:inline-block}
+.icb.pq{width:22px;height:22px;margin-right:6px}
+.palma{min-width:190px;min-height:96px;border:0;border-radius:24px;background:#ffd233;color:#4a3800;font-weight:900;
+  font-size:20px;box-shadow:0 6px 0 #d5a800}
+.palma:active{transform:translateY(4px);box-shadow:0 2px 0 #d5a800}
+.contab{font-weight:900;font-size:20px;color:#5b4fc4}
+.contab b{font-size:30px}
+/* a trilha de sílabas: acende uma a cada palma e a voz diz aquela sílaba */
+.trilhasil{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:2px}
+.silbox{min-width:56px;padding:8px 12px;border:3px dashed #d9ddf2;border-radius:14px;background:#fff;
+  color:#c3c7dd;font-weight:900;font-size:22px;letter-spacing:1px;
+  -webkit-transition:all .18s;transition:all .18s}
+.silbox.acesa{border-style:solid;border-color:#15a34a;background:#e7f8ee;color:#0d7736;
+  -webkit-transform:scale(1.06);transform:scale(1.06)}
+@media (prefers-reduced-motion: reduce){ .silbox{-webkit-transition:none;transition:none} }
+
+/* 3 — sequência lógica */
+.fila{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:10px 0}
+.fila .q{width:78px;height:78px;border:3px solid #e2e5f5;border-radius:16px;background:#fff;display:flex;
+  align-items:center;justify-content:center}
+.fila .q img{width:66px;height:66px;object-fit:contain}
+.fila .q.vaga{border-style:dashed;border-color:#6d5ae6;background:#f4f2ff;font-size:34px;color:#6d5ae6;font-weight:900}
+/* o quadro vazio acende quando a figura puxada chega perto */
+.fila .q.vaga.perto{border-color:#15a34a;background:#e7f8ee;color:#0d7736;
+  -webkit-transform:scale(1.08);transform:scale(1.08)}
+.fila .q.vaga.cheia{border-style:solid;border-color:#15a34a;background:#e7f8ee}
+.ajuda{text-align:center;font-size:14px;color:#6b7192;margin:2px 0 6px}
+/* a cópia que segue o dedo/mouse enquanto a criança puxa */
+/* o cinto e o suspensório do `draggable="false"`: navegador antigo não olha o
+   atributo, mas olha esta regra */
+img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:none}
+.fantasma{position:fixed;z-index:70;pointer-events:none;opacity:.92;
+  -webkit-transform:scale(1.1);transform:scale(1.1);
+  -webkit-box-shadow:0 12px 26px rgba(30,35,52,.3);box-shadow:0 12px 26px rgba(30,35,52,.3)}
+.op.puxada{opacity:.35}
+
+/* 4 — circular */
+.grade{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:10px 0;position:relative}
+/* a folha de acetato onde a criança risca o círculo (ver riscoDeCircular) */
+.riscocv{position:absolute;left:0;top:0;pointer-events:none;z-index:5}
+.riscocv.ativo{z-index:5}
+.circ{position:relative;border:0;background:none;padding:6px;border-radius:50%;min-width:104px;min-height:104px}
+.circ img{width:92px;height:92px;object-fit:contain;display:block}
+.circ:after{content:"";position:absolute;inset:0;border:5px solid transparent;border-radius:50%}
+.circ.marcada:after{border-color:#e0562f}
+.circ.certa:after{border-color:#15a34a}
+.circ.errada:after{border-color:#e0562f;border-style:dotted}
+.chip{display:inline-flex;align-items:center;justify-content:center;background:#6d5ae6;color:#fff;font-weight:900;
+  font-size:24px;border-radius:14px;padding:6px 16px;letter-spacing:2px}
+
+/* 5 — pintar a sílaba · 7 — marcar X */
+.op.pinta.certa{background:#ffd233;border-color:#d5a800;color:#4a3800}
+.marcax{display:flex;flex-direction:column;gap:8px;align-items:flex-start;margin-top:10px}
+.lx{display:flex;align-items:center;gap:12px;min-height:56px;border:3px solid #d9ddf2;border-radius:16px;
+  background:#fff;padding:6px 16px;font-weight:900;font-size:22px;color:#1e2334;width:100%;max-width:320px}
+.lx .cx{width:34px;height:34px;border:3px solid #9aa0bd;border-radius:8px;display:inline-flex;align-items:center;
+  justify-content:center;font-size:24px;color:#e0562f;flex:none}
+.lx.certa{border-color:#15a34a;background:#e7f8ee}
+.lx.certa .cx{border-color:#15a34a;color:#15a34a}
+.lx.erro{border-color:#e0562f;-webkit-animation:treme .4s;animation:treme .4s}
+
+/* 6 · 10 — ligar e colar */
+/* ⚠️ AS DUAS COLUNAS TÊM QUE TER A MESMA CAIXA (pedido do Marcos, set/2026:
+   *"deixe os retângulos das sílabas iguais ao retângulo que estão os desenhos
+   dentro, para ficar proporcional, igual e não ficar feio"*). Antes a caixa era
+   `min-height`: a da esquerda crescia com a figura de 64px e a da direita ficava
+   no mínimo — duas alturas diferentes lado a lado. Agora a altura é FIXA e igual
+   nas duas, e a largura de cada coluna também.
+   E as colunas ficam mais afastadas, para o traço ter onde desenhar a curva. */
+.ligar{position:relative;display:flex;gap:clamp(30px,10vw,96px);justify-content:space-between;margin:14px 6px}
+.ligar .col{display:flex;flex-direction:column;gap:14px;flex:1 1 0;min-width:0}
+.linhas{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.ponta{border:3px solid #d9ddf2;border-radius:16px;background:#fff;height:86px;display:flex;align-items:center;
+  justify-content:center;font-weight:900;font-size:24px;letter-spacing:1px;padding:6px;
+  -ms-touch-action:none;touch-action:none;-webkit-transition:border-color .15s,box-shadow .15s;
+  transition:border-color .15s,box-shadow .15s}
+.ponta img{width:68px;height:68px;object-fit:contain}
+@media (max-width:420px){ .ponta{height:74px;font-size:21px} .ponta img{width:58px;height:58px} }
+.ponta.marcada{border-color:#6d5ae6;box-shadow:0 0 0 4px rgba(109,90,230,.22)}
+.ponta.feita{border-color:#15a34a;background:#e7f8ee}
+.ponta.mostra{border-color:#ffd233;box-shadow:0 0 0 4px rgba(255,210,51,.4)}
+.ponta.treme{-webkit-animation:treme .4s;animation:treme .4s}
+
+/* 8 — escrever a sílaba que falta */
+.silbox{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:10px 0}
+.sq{min-width:70px;min-height:64px;border:3px solid #d9ddf2;border-radius:14px;background:#fff;display:flex;
+  align-items:center;justify-content:center;font-weight:900;font-size:26px;letter-spacing:2px;color:#1e2334}
+.sq.vaga{border-style:dashed;border-color:#6d5ae6;background:#f4f2ff;color:#6d5ae6}
+.sq.vaga.ativa{background:#fff;box-shadow:0 0 0 4px rgba(109,90,230,.25)}
+.sq.ok{border-color:#15a34a;background:#e7f8ee;color:#0d7736}
+.cursor{display:inline-block;width:3px;height:28px;background:#6d5ae6;margin-left:2px;
+  -webkit-animation:pisca .9s steps(2) infinite;animation:pisca .9s steps(2) infinite}
+@-webkit-keyframes pisca{0%,49%{opacity:1}50%,100%{opacity:0}}
+@keyframes pisca{0%,49%{opacity:1}50%,100%{opacity:0}}
+
+/* 9 — ordenar as sílabas */
+.tira{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px 0}
+.sil{min-width:74px;min-height:58px;border:3px solid #d9ddf2;border-radius:14px;background:#fff;font-weight:900;
+  font-size:24px;letter-spacing:2px;color:#1e2334;-ms-touch-action:none;touch-action:none}
+.sil.usada{opacity:.28;pointer-events:none}
+.sil.arrastando{opacity:.5}
+.vagas{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
+.vaga{min-width:74px;min-height:58px;border:3px dashed #6d5ae6;border-radius:14px;background:#f4f2ff;display:flex;
+  align-items:center;justify-content:center;font-weight:900;font-size:24px;letter-spacing:2px;color:#6d5ae6}
+.vaga.cheia{border-style:solid;border-color:#15a34a;background:#e7f8ee;color:#0d7736}
+.vaga.perto{border-color:#15a34a;background:#e7f8ee;color:#0d7736;
+  -webkit-transform:scale(1.08);transform:scale(1.08)}
+.sil.puxada{opacity:.35}
+
+/* 10 — recortar e colar */
+.colar{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:10px 0}
+.cel{width:118px;display:flex;flex-direction:column;align-items:center;gap:6px}
+.cel img{width:96px;height:96px;object-fit:contain}
+.cel .alvo{width:84px;min-height:58px;border:3px dashed #6d5ae6;border-radius:14px;background:#f4f2ff;display:flex;
+  align-items:center;justify-content:center;font-weight:900;font-size:24px;letter-spacing:2px;color:#6d5ae6}
+.cel .alvo.cheia{border-style:solid;border-color:#15a34a;background:#e7f8ee;color:#0d7736}
+.cel .alvo.perto{box-shadow:0 0 0 5px rgba(109,90,230,.28)}
+
+/* carimbo, nav, capa, fim */
+.carimbo{position:absolute;right:14px;top:60px;transform:rotate(-14deg) scale(.4);opacity:0;color:#15a34a;
+  border:5px solid #15a34a;border-radius:14px;padding:6px 14px;font-weight:900;font-size:20px;text-align:center;
+  line-height:1.05;pointer-events:none;-webkit-transition:all .45s;transition:all .45s}
+.pagina.pronta .carimbo{opacity:.92;transform:rotate(-14deg) scale(1)}
+#nav{position:fixed;left:0;right:0;bottom:0;z-index:18;background:#fff;border-top:3px solid #6d5ae6;padding:8px 10px;
+  display:none;align-items:center;gap:10px;box-shadow:0 -3px 14px rgba(40,30,90,.14)}
+#nav .txt{flex:1;text-align:center;font-weight:800;color:#5b4fc4;font-size:14px;min-width:0}
+#barraCapa{position:fixed;left:0;right:0;bottom:0;z-index:19;background:#fff;border-top:3px solid #6d5ae6;padding:10px;display:none}
+#barraCapa.aberta{display:block}
+#barraCapa .lin{display:flex;gap:10px;align-items:center;max-width:640px;margin:0 auto}
+#barraCapa label{font-weight:800;color:#5b4fc4;font-size:15px;white-space:nowrap}
+#nomeIn{flex:1;min-width:0;min-height:50px;border:3px solid #6d5ae6;border-radius:14px;padding:0 12px;
+  font-family:"Comic Sans MS","Chalkboard SE","Segoe Print",cursive;font-weight:700;font-size:22px;color:#1d4ed8;background:#fff}
+#nomeIn:focus{outline:none;border-color:#b0308f;box-shadow:0 0 0 4px rgba(176,48,143,.25)}
+/* ================= A CAPA =================
+   Pedido do Marcos (set/2026): *"essas atividades deveriam ter uma capa bem
+   legal e bonita"*. O tema sai do próprio nome — uma FÁBRICA de palavras:
+   telhado de fábrica, letras que entram uma a uma como se saíssem da linha de
+   montagem, e a esteira embaixo carregando as figuras das folhas.
+   Feita só com CSS e PNG: nada de SVG, nada de emoji (regra dele). */
+.capa{position:relative;text-align:center;padding:18px 16px 24px;overflow:hidden;
+  background:-webkit-linear-gradient(top,#efe9ff 0%,#fdf6ff 58%,#fff 100%);
+  background:linear-gradient(180deg,#efe9ff 0%,#fdf6ff 58%,#fff 100%)}
+.capa .ceu{position:absolute;left:0;right:0;top:0;bottom:0;pointer-events:none;overflow:hidden}
+/* bolhas de luz ao fundo — dão profundidade sem competir com o título.
+   ⚠️ Antes eram três retângulos brancos arredondados que, na tela, pareciam
+   FALHA de desenho. Círculo suave da própria cor da capa lê como fundo. */
+.capa .nv{position:absolute;display:block;border-radius:50%;
+  background:-webkit-radial-gradient(circle,rgba(124,102,255,.20),rgba(124,102,255,0) 70%);
+  background:radial-gradient(circle,rgba(124,102,255,.20),rgba(124,102,255,0) 70%)}
+.capa .n1{width:240px;height:240px;left:-60px;top:-40px}
+.capa .n2{width:300px;height:300px;right:-90px;top:10px}
+.capa .n3{width:180px;height:180px;left:44%;bottom:-70px}
+/* o telhadinho da fábrica com a inicial */
+.capa .chapeu{position:relative;width:66px;height:66px;margin:14px auto 2px;border-radius:16px;
+  background:-webkit-linear-gradient(top left,#7c66ff,#5b4fc4);
+  background:linear-gradient(135deg,#7c66ff,#5b4fc4);color:#fff;font-weight:900;font-size:34px;
+  line-height:66px;box-shadow:0 8px 18px rgba(91,79,196,.36)}
+.capa .chapeu:before{content:"";position:absolute;left:-9px;right:-9px;top:-13px;height:0;
+  border-left:42px solid transparent;border-right:42px solid transparent;border-bottom:16px solid #b0308f}
+.capa h1.titu{margin:10px 0 4px;line-height:1;display:flex;flex-wrap:wrap;justify-content:center;gap:2px}
+.capa .titu .lt{display:inline-block;font-size:clamp(24px,6.4vw,42px);font-weight:900;letter-spacing:0;
+  color:#4b3fb0;text-shadow:0 3px 0 #d9d2ff,0 5px 10px rgba(60,40,140,.18);
+  -webkit-animation:caiLetra .5s both;animation:caiLetra .5s both}
+.capa .titu .esp{display:inline-block;width:14px}
+/* ⚠️ `caiLetra` e não `cai`: o confete JÁ tinha um `@keyframes cai` que
+   termina em `opacity:0`, declarado mais abaixo — e ele vencia. As letras
+   do título animavam para invisível e a capa aparecia sem título nenhum.
+   Nome de keyframe é global: conferir antes de criar um. */
+@-webkit-keyframes caiLetra{from{opacity:0;-webkit-transform:translateY(-26px) rotate(-8deg)}to{opacity:1;-webkit-transform:none}}
+@keyframes caiLetra{from{opacity:0;transform:translateY(-26px) rotate(-8deg)}to{opacity:1;transform:none}}
+.capa .sub{font-weight:700;color:#5b4fc4;font-size:clamp(13px,3.6vw,18px);margin:6px 0 4px}
+/* a esteira: as figuras em cima, a cinta rodando embaixo */
+.capa .esteira{max-width:660px;margin:16px auto 4px;position:relative}
+/* ---- as duplas da capa: rima é coisa de DOIS, então os pares entram juntos ----
+   ⚠️ sem `white-space:nowrap` no par, o navegador quebra entre a figura e o
+   sinal de igual e a dupla deixa de se ler como dupla. */
+.capa .dupla{display:inline-flex;align-items:center;gap:4px;white-space:nowrap;
+  -webkit-animation:entraDupla .6s cubic-bezier(.3,1.4,.5,1) both;
+  animation:entraDupla .6s cubic-bezier(.3,1.4,.5,1) both}
+.capa .dupla .fig{height:clamp(54px,13vw,86px)}
+.capa .igual{display:inline-block;width:16px;height:12px;flex:none;
+  border-top:3px solid #6d5ae6;border-bottom:3px solid #6d5ae6}
+@-webkit-keyframes entraDupla{from{opacity:0;-webkit-transform:translateY(-18px) scale(.85)}to{opacity:1;-webkit-transform:none}}
+@keyframes entraDupla{from{opacity:0;transform:translateY(-18px) scale(.85)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.capa .dupla{-webkit-animation:none!important;animation:none!important;opacity:1!important;-webkit-transform:none!important;transform:none!important}}
+.capa .cena{display:flex;justify-content:center;align-items:flex-end;gap:8px;flex-wrap:nowrap}
+.capa .cena img{width:clamp(54px,14vw,110px);height:clamp(54px,14vw,110px);object-fit:contain;
+  -webkit-animation:sobe 2.6s ease-in-out infinite;animation:sobe 2.6s ease-in-out infinite}
+.capa .cena img:nth-child(2){-webkit-animation-delay:.35s;animation-delay:.35s}
+.capa .cena img:nth-child(3){-webkit-animation-delay:.7s;animation-delay:.7s}
+.capa .cena img:nth-child(4){-webkit-animation-delay:1.05s;animation-delay:1.05s}
+.capa .cena img:nth-child(5){-webkit-animation-delay:1.4s;animation-delay:1.4s}
+@-webkit-keyframes sobe{0%,100%{-webkit-transform:translateY(0)}50%{-webkit-transform:translateY(-7px)}}
+@keyframes sobe{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+.capa .cinta{display:flex;gap:6px;justify-content:center;background:#3b3560;border-radius:9px;
+  padding:6px 8px;margin-top:6px;box-shadow:0 6px 14px rgba(35,25,80,.22)}
+.capa .cinta i{display:block;width:26px;height:9px;background:#6d5ae6;border-radius:5px}
+.capa .chamada{margin-top:14px;font-weight:700;color:#4b4f70;font-size:clamp(13px,3.4vw,16px)}
+@media (prefers-reduced-motion: reduce){
+  .capa .titu .lt,.capa .cena img{-webkit-animation:none;animation:none}
+}
+#fim,#retomar{display:none;max-width:880px;margin:12px auto;background:#fff;border-radius:22px;padding:20px 16px;
+  box-shadow:0 10px 34px rgba(35,25,80,.16);text-align:center}
+#fim h2{margin:0 0 6px;color:#6d5ae6;font-size:clamp(21px,5.5vw,30px)}
+.estrelas{font-size:44px;letter-spacing:8px;margin:6px 0}
+.barras{max-width:520px;margin:10px auto;text-align:left}
+.barra{display:flex;align-items:center;gap:8px;margin:6px 0;font-weight:700;font-size:14px}
+.barra span{flex:0 0 42%;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.barra .tr{flex:1;height:14px;background:#e6e6f4;border-radius:8px;overflow:hidden}
+.barra .tr i{display:block;height:100%;width:0;background:#15a34a;-webkit-transition:width .8s;transition:width .8s}
+.barra b{flex:none;color:#5b4fc4}
+/* ⚠️ SEM EMOJI E SEM SVG (ordem do Marcos, set/2026: *"evite usar svg e
+   emojis pois não aparecem em alguns navegadores"*). Nos PCs da escola o
+   emoji vira quadradinho vazio e a criança de seis anos não sabe o que é um
+   quadradinho. Aqui: troféu e estrelas são PNG de argila (do banco), as
+   setas são triângulos de CSS puro e o resto é palavra escrita. */
+#medalha{width:132px;height:132px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#ffe680,#e0a800);
+  margin:14px auto;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 22px rgba(180,140,0,.42);cursor:pointer;-ms-touch-action:none;touch-action:none}
+#medalha img{width:92px;height:92px;object-fit:contain;display:block;pointer-events:none}
+/* se a figura do troféu faltar, o disco ainda é um disco de ouro com a
+   palavra — nunca um quadradinho quebrado. */
+#medalha.semfig:after{content:"BOA!";font-weight:900;font-size:26px;color:#7a5600}
+.seta{display:inline-block;width:0;height:0;vertical-align:middle;
+  border-top:8px solid transparent;border-bottom:8px solid transparent}
+.seta.esq{border-right:11px solid currentColor;margin-right:7px}
+.seta.dir{border-left:11px solid currentColor;margin-left:7px}
+#estrelas img{width:52px;height:52px;object-fit:contain;display:inline-block;margin:0 3px;vertical-align:middle}
+#relatorio{display:none;text-align:left;background:#f6f7fd;border:2px solid #d9ddf2;border-radius:16px;padding:12px;margin-top:12px;font-size:13px}
+#relatorio table{border-collapse:collapse;width:100%;margin-top:8px}
+#relatorio th,#relatorio td{border:1px solid #d9ddf2;padding:5px 7px;text-align:left}
+#relatorio th{background:#eceefa}
+/* a nota grande do professor: porcentagem + conceito em palavras */
+.notao{display:flex;align-items:center;gap:14px;background:#fff;border:2px solid #d9ddf2;
+  border-radius:14px;padding:10px 14px;margin-top:10px}
+.notao .nn{font-size:38px;font-weight:900;color:#15a34a;line-height:1}
+.notao .nl{font-size:13px;color:#3b4064;line-height:1.35}
+#menuProf{display:none;position:fixed;inset:0;z-index:60;background:rgba(20,16,45,.62);align-items:center;justify-content:center;padding:14px}
+#menuProf.aberto{display:flex}
+#menuProf .cx{background:#fff;border:4px solid #6d5ae6;border-radius:20px;padding:16px;max-width:520px;width:100%;
+  max-height:92vh;overflow:auto;box-shadow:0 14px 44px rgba(0,0,0,.4)}
+#menuProf h3{margin:0 0 4px;color:#6d5ae6;font-size:20px}
+#menuProf p{margin:0 0 12px;font-size:13px;color:#4a4f66;line-height:1.4}
+#menuProf .folhas{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+#menuProf .folhas button{min-height:46px;border:0;border-radius:12px;background:#eceefa;color:#4a4f66;font-weight:800;
+  font-size:14px;padding:8px 12px;box-shadow:0 3px 0 #d3d7ea;flex:1 1 150px;text-align:left}
+#teclado{position:fixed;left:0;right:0;bottom:0;z-index:30;background:#fff;border-top:3px solid #6d5ae6;padding:8px;display:none}
+#teclado.aberto{display:block}
+#teclado .dica{text-align:center;font-weight:800;color:#5b4fc4;font-size:13px;margin-bottom:6px}
+#tk{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:560px;margin:0 auto}
+#tk button{min-height:48px;border:0;border-radius:12px;background:#eceefa;color:#1e2334;font-weight:900;font-size:19px;box-shadow:0 3px 0 #d3d7ea}
+#tk button:active{transform:translateY(2px);box-shadow:0 1px 0 #d3d7ea}
+#tk button.ap{background:#fde2da;grid-column:span 3}
+#tk button.ok{background:#d9f2e3;grid-column:span 4}
+#confete{position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden}
+.cf{position:absolute;width:9px;height:14px;opacity:.95;-webkit-animation:cai 1.5s linear forwards;animation:cai 1.5s linear forwards}
+@-webkit-keyframes cai{to{transform:translateY(105vh) rotate(560deg);opacity:0}}
+@keyframes cai{to{transform:translateY(105vh) rotate(560deg);opacity:0}}
+.oculto{display:none!important}
+</style></head><body>
+
+<div id="topo">
+  <button class="zap ouvir" id="bOuvir" aria-label="Ouvir de novo"><svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 0-5 5v1H5v6h2v1a5 5 0 0 0 10 0v-1h2V9h-2V8a5 5 0 0 0-5-5z"/></svg></button>
+  <button class="zap" id="bVoz" aria-label="Ligar ou desligar a narração"><svg viewBox="0 0 24 24"><path d="M4 9v6h4l5 4V5L8 9H4zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4z"/></svg></button>
+  <div class="tit">O Bando das Rimas</div>
+  <div class="prog"><i id="progI"></i></div>
+  <div class="pg" id="pg">Capa</div>
+</div>
+
+<div id="livro"></div>
+
+<div id="fim">
+  <h2>Caderno completo!</h2>
+  <div class="estrelas" id="estrelas"></div>
+  <div class="barras" id="barras"></div>
+  <p id="resumo" style="font-weight:800;font-size:16px"></p>
+  <div id="medalha" role="button" tabindex="0" aria-label="Troféu. Segure dois segundos para abrir o relatório do professor"><img src="img/ri_trofeu.png?v=1" alt="Troféu" draggable="false" onerror="this.style.display='none';this.parentNode.className='semfig'"></div>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <button class="bt cinza" id="bRever">Rever o caderno</button>
+    <button class="bt verde" id="bRecomecar">Caderno novo</button>
+  </div>
+  <div id="relatorio"></div>
+</div>
+
+<div id="retomar">
+  <h2 style="color:#6d5ae6;margin:0 0 6px">Você estava aqui!</h2>
+  <p id="retTxt" style="font-weight:700"></p>
+  <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <button class="bt verde" id="bContinuar">Continuar de onde parei</button>
+    <button class="bt cinza" id="bZerar">Começar um caderno novo</button>
+  </div>
+</div>
+
+<div id="nav">
+  <button class="bt cinza" id="bAnt"><i class="seta esq"></i>Anterior</button>
+  <div class="txt" id="navTxt"></div>
+  <button class="bt" id="bProx">Próxima<i class="seta dir"></i></button>
+</div>
+
+<div id="barraCapa"><div class="lin"><label for="nomeIn">Seu nome:</label><input id="nomeIn" type="text" maxlength="24" autocomplete="off" spellcheck="false" placeholder="escreva aqui"><button class="bt" id="bComecar">Começar</button></div></div>
+
+<div id="menuProf" role="dialog" aria-label="Menu do professor" aria-modal="true">
+  <div class="cx">
+    <h3>Menu do professor</h3>
+    <p>Chave mestra <b>1275@</b>. Abra qualquer folha para conferir; o trabalho da criança não se apaga.</p>
+    <div class="folhas" id="mpFolhas"></div>
+    <button class="bt cinza" id="mpFechar">Fechar</button>
+  </div>
+</div>
+
+<div id="teclado" aria-label="Teclado de letras">
+  <div class="dica" id="tkDica">Escreva a sílaba</div>
+  <div id="tk"></div>
+</div>
+<div id="confete" aria-hidden="true"></div>
+
+<script>
+/* ---------- AS PALAVRAS DE CADA FOLHA (o gerar_falas.py lê este bloco) ---------- */
+/*ITENS-INI*/
+var ITENS = {
+ "p1": [
+  {
+   "a": "gato",
+   "b": "pato",
+   "r": 1
+  },
+  {
+   "a": "bola",
+   "b": "bolsa",
+   "r": 0
+  },
+  {
+   "a": "vela",
+   "b": "panela",
+   "r": 1
+  },
+  {
+   "a": "casa",
+   "b": "cachorro",
+   "r": 0
+  },
+  {
+   "a": "boca",
+   "b": "foca",
+   "r": 1
+  },
+  {
+   "a": "bolo",
+   "b": "bola",
+   "r": 0
+  },
+  {
+   "a": "tomate",
+   "b": "abacate",
+   "r": 1
+  },
+  {
+   "a": "mala",
+   "b": "macaco",
+   "r": 0
+  },
+  {
+   "a": "foguete",
+   "b": "sorvete",
+   "r": 1
+  },
+  {
+   "a": "porco",
+   "b": "pato",
+   "r": 0
+  },
+  {
+   "a": "vela",
+   "b": "estrela",
+   "r": 1
+  },
+  {
+   "a": "balao",
+   "b": "mamao",
+   "r": 1
+  },
+  {
+   "a": "gato",
+   "b": "galinha",
+   "r": 0
+  },
+  {
+   "a": "passarinho",
+   "b": "ninho",
+   "r": 1
+  },
+  {
+   "a": "boca",
+   "b": "bolo",
+   "r": 0
+  },
+  {
+   "a": "rato",
+   "b": "pato",
+   "r": 1
+  },
+  {
+   "a": "pipoca",
+   "b": "panela",
+   "r": 0
+  },
+  {
+   "a": "cabrito",
+   "b": "apito",
+   "r": 1
+  }
+ ],
+ "p2": [
+  {
+   "f": "passarinho",
+   "op": [
+    "casa",
+    "cachorro",
+    "ninho"
+   ],
+   "c": "ninho"
+  },
+  {
+   "f": "cabrito",
+   "op": [
+    "apito",
+    "galinha",
+    "caracol"
+   ],
+   "c": "apito"
+  },
+  {
+   "f": "aviao",
+   "op": [
+    "bolo",
+    "balao",
+    "porco"
+   ],
+   "c": "balao"
+  },
+  {
+   "f": "foguete",
+   "op": [
+    "sorvete",
+    "livro",
+    "estrela"
+   ],
+   "c": "sorvete"
+  },
+  {
+   "f": "gato",
+   "op": [
+    "cafe",
+    "pato",
+    "mala"
+   ],
+   "c": "pato"
+  },
+  {
+   "f": "tomate",
+   "op": [
+    "rato",
+    "queijo",
+    "abacate"
+   ],
+   "c": "abacate"
+  },
+  {
+   "f": "boca",
+   "op": [
+    "pipoca",
+    "banana",
+    "livro"
+   ],
+   "c": "pipoca"
+  },
+  {
+   "f": "vela",
+   "op": [
+    "queijo",
+    "estrela",
+    "porco"
+   ],
+   "c": "estrela"
+  },
+  {
+   "f": "mamao",
+   "op": [
+    "mala",
+    "balao",
+    "uva"
+   ],
+   "c": "balao"
+  },
+  {
+   "f": "rato",
+   "op": [
+    "ferro",
+    "gato",
+    "janela"
+   ],
+   "c": "gato"
+  }
+ ],
+ "p3": [
+  {
+   "f": "sereia",
+   "op": [
+    "baleia",
+    "lata",
+    "foca"
+   ],
+   "c": "baleia"
+  },
+  {
+   "f": "picole",
+   "op": [
+    "banana",
+    "pimenta",
+    "cafe"
+   ],
+   "c": "cafe"
+  },
+  {
+   "f": "mao",
+   "op": [
+    "balao",
+    "macaco",
+    "folha"
+   ],
+   "c": "balao"
+  },
+  {
+   "f": "vela",
+   "op": [
+    "peneira",
+    "panela",
+    "gato"
+   ],
+   "c": "panela"
+  },
+  {
+   "f": "janela",
+   "op": [
+    "ovo",
+    "banana",
+    "panela"
+   ],
+   "c": "panela"
+  },
+  {
+   "f": "balao",
+   "op": [
+    "mamao",
+    "laranja",
+    "boca"
+   ],
+   "c": "mamao"
+  },
+  {
+   "f": "janela",
+   "op": [
+    "estrela",
+    "cachorro",
+    "banana"
+   ],
+   "c": "estrela"
+  },
+  {
+   "f": "foca",
+   "op": [
+    "pipoca",
+    "laranja",
+    "livro"
+   ],
+   "c": "pipoca"
+  },
+  {
+   "f": "pato",
+   "op": [
+    "queijo",
+    "rato",
+    "uva"
+   ],
+   "c": "rato"
+  }
+ ],
+ "p4": [
+  {
+   "f": "bola",
+   "op": [
+    "bolsa",
+    "ursinho",
+    "mola"
+   ],
+   "c": "mola",
+   "peg": "bolsa"
+  },
+  {
+   "f": "boca",
+   "op": [
+    "bolo",
+    "gota",
+    "foca"
+   ],
+   "c": "foca",
+   "peg": "bolo"
+  },
+  {
+   "f": "pato",
+   "op": [
+    "panela",
+    "porco",
+    "gato"
+   ],
+   "c": "gato",
+   "peg": "panela"
+  },
+  {
+   "f": "vela",
+   "op": [
+    "ferro",
+    "janela",
+    "vela"
+   ],
+   "c": "janela",
+   "peg": "ferro"
+  },
+  {
+   "f": "mamao",
+   "op": [
+    "mala",
+    "macaco",
+    "balao"
+   ],
+   "c": "balao",
+   "peg": "mala"
+  },
+  {
+   "f": "sorvete",
+   "op": [
+    "sereia",
+    "foguete",
+    "lupa"
+   ],
+   "c": "foguete",
+   "peg": "sereia"
+  },
+  {
+   "f": "panela",
+   "op": [
+    "porco",
+    "pato",
+    "vela"
+   ],
+   "c": "vela",
+   "peg": "pato"
+  },
+  {
+   "f": "gato",
+   "op": [
+    "galinha",
+    "gota",
+    "rato"
+   ],
+   "c": "rato",
+   "peg": "galinha"
+  },
+  {
+   "f": "balao",
+   "op": [
+    "baleia",
+    "banana",
+    "mamao"
+   ],
+   "c": "mamao",
+   "peg": "baleia"
+  }
+ ],
+ "p5": [
+  {
+   "g": [
+    "gato",
+    "casa",
+    "pato",
+    "livro",
+    "uva",
+    "ferro"
+   ],
+   "c": [
+    "gato",
+    "pato"
+   ]
+  },
+  {
+   "g": [
+    "vela",
+    "macaco",
+    "banana",
+    "panela",
+    "queijo",
+    "porco"
+   ],
+   "c": [
+    "vela",
+    "panela"
+   ]
+  },
+  {
+   "g": [
+    "boca",
+    "mala",
+    "ovo",
+    "foca",
+    "cachorro",
+    "xicara"
+   ],
+   "c": [
+    "boca",
+    "foca"
+   ]
+  },
+  {
+   "g": [
+    "tomate",
+    "lupa",
+    "galinha",
+    "abacate",
+    "bolo",
+    "gota"
+   ],
+   "c": [
+    "tomate",
+    "abacate"
+   ]
+  },
+  {
+   "g": [
+    "sereia",
+    "caracol",
+    "baleia",
+    "laranja",
+    "folha",
+    "chinelo"
+   ],
+   "c": [
+    "sereia",
+    "baleia"
+   ]
+  },
+  {
+   "g": [
+    "passarinho",
+    "pipoca",
+    "ninho",
+    "banana",
+    "mala",
+    "queijo"
+   ],
+   "c": [
+    "passarinho",
+    "ninho"
+   ]
+  },
+  {
+   "g": [
+    "balao",
+    "queijo",
+    "mamao",
+    "livro",
+    "porco",
+    "uva"
+   ],
+   "c": [
+    "balao",
+    "mamao"
+   ]
+  },
+  {
+   "g": [
+    "rato",
+    "banana",
+    "gato",
+    "ferro",
+    "laranja",
+    "mala"
+   ],
+   "c": [
+    "rato",
+    "gato"
+   ]
+  },
+  {
+   "g": [
+    "vela",
+    "cachorro",
+    "estrela",
+    "gota",
+    "porco",
+    "uva"
+   ],
+   "c": [
+    "vela",
+    "estrela"
+   ]
+  }
+ ],
+ "p6": [
+  {
+   "f": "foguete",
+   "op": [
+    "sorvete",
+    "porco",
+    "casa"
+   ],
+   "c": "sorvete"
+  },
+  {
+   "f": "cabrito",
+   "op": [
+    "ovo",
+    "apito",
+    "uva"
+   ],
+   "c": "apito"
+  },
+  {
+   "f": "janela",
+   "op": [
+    "vela",
+    "macaco",
+    "livro"
+   ],
+   "c": "vela"
+  },
+  {
+   "f": "gato",
+   "op": [
+    "banana",
+    "rato",
+    "chinelo"
+   ],
+   "c": "rato"
+  },
+  {
+   "f": "boca",
+   "op": [
+    "pipoca",
+    "mala",
+    "ferro"
+   ],
+   "c": "pipoca"
+  },
+  {
+   "f": "aviao",
+   "op": [
+    "mao",
+    "queijo",
+    "gota"
+   ],
+   "c": "mao"
+  },
+  {
+   "f": "mamao",
+   "op": [
+    "balao",
+    "livro",
+    "queijo"
+   ],
+   "c": "balao"
+  },
+  {
+   "f": "estrela",
+   "op": [
+    "porco",
+    "panela",
+    "banana"
+   ],
+   "c": "panela"
+  },
+  {
+   "f": "pipoca",
+   "op": [
+    "uva",
+    "foca",
+    "mala"
+   ],
+   "c": "foca"
+  }
+ ],
+ "p7": [
+  [
+   {
+    "e": "gato",
+    "d": "pato"
+   },
+   {
+    "e": "vela",
+    "d": "panela"
+   },
+   {
+    "e": "boca",
+    "d": "foca"
+   },
+   {
+    "e": "tomate",
+    "d": "abacate"
+   }
+  ],
+  [
+   {
+    "e": "passarinho",
+    "d": "ninho"
+   },
+   {
+    "e": "aviao",
+    "d": "balao"
+   },
+   {
+    "e": "foguete",
+    "d": "sorvete"
+   },
+   {
+    "e": "bola",
+    "d": "mola"
+   }
+  ],
+  [
+   {
+    "e": "cabrito",
+    "d": "apito"
+   },
+   {
+    "e": "sereia",
+    "d": "baleia"
+   },
+   {
+    "e": "picole",
+    "d": "cafe"
+   },
+   {
+    "e": "janela",
+    "d": "estrela"
+   }
+  ],
+  [
+   {
+    "e": "balao",
+    "d": "mamao"
+   },
+   {
+    "e": "rato",
+    "d": "gato"
+   },
+   {
+    "e": "vela",
+    "d": "estrela"
+   },
+   {
+    "e": "boca",
+    "d": "pipoca"
+   }
+  ]
+ ],
+ "p8": [
+  {
+   "t": "Um, dois, feijão com ###.",
+   "c": "arroz",
+   "op": [
+    "arroz",
+    "pão",
+    "bolo"
+   ]
+  },
+  {
+   "t": "Hoje é domingo, pé de ###.",
+   "c": "cachimbo",
+   "op": [
+    "cachimbo",
+    "cadeira",
+    "sapato"
+   ]
+  },
+  {
+   "t": "Batatinha quando nasce, esparrama pelo ###.",
+   "c": "chão",
+   "op": [
+    "chão",
+    "muro",
+    "campo"
+   ]
+  },
+  {
+   "t": "Rei, capitão, soldado, ladrão, moça bonita do meu ###.",
+   "c": "coração",
+   "op": [
+    "coração",
+    "chapéu",
+    "caderno"
+   ]
+  },
+  {
+   "t": "O sapo não lava o pé, não lava porque não ###.",
+   "c": "quer",
+   "op": [
+    "quer",
+    "pode",
+    "sabe"
+   ]
+  }
+ ],
+ "p9": [
+  {
+   "f": "gato",
+   "c": "PATO"
+  },
+  {
+   "f": "bola",
+   "c": "MOLA"
+  },
+  {
+   "f": "vela",
+   "c": "PANELA"
+  },
+  {
+   "f": "boca",
+   "c": "FOCA"
+  },
+  {
+   "f": "aviao",
+   "c": "BALAO"
+  },
+  {
+   "f": "cabrito",
+   "c": "APITO"
+  },
+  {
+   "f": "vela",
+   "c": "ESTRELA"
+  },
+  {
+   "f": "mamao",
+   "c": "BALAO"
+  },
+  {
+   "f": "rato",
+   "c": "GATO"
+  }
+ ],
+ "p10": [
+  {
+   "f": "gato",
+   "par": "pato"
+  },
+  {
+   "f": "bola",
+   "par": "mola"
+  },
+  {
+   "f": "vela",
+   "par": "janela"
+  },
+  {
+   "f": "boca",
+   "par": "pipoca"
+  },
+  {
+   "f": "foguete",
+   "par": "sorvete"
+  },
+  {
+   "f": "sereia",
+   "par": "baleia"
+  },
+  {
+   "f": "balao",
+   "par": "mamao"
+  },
+  {
+   "f": "rato",
+   "par": "gato"
+  },
+  {
+   "f": "passarinho",
+   "par": "ninho"
+  },
+  {
+   "f": "cabrito",
+   "par": "apito"
+  }
+ ]
+};
+/*ITENS-FIM*/
+/*FALAS-INI*/
+var FALAS = {
+ "capa": "O Bando das Rimas. Dez folhas para brincar com as palavras que terminam igual. Escreva o seu nome ali embaixo e toque em Começar.",
+ "certo10_balao": "Balão e mamão foram para o seu mural!",
+ "certo10_boca": "Boca e pipoca foram para o seu mural!",
+ "certo10_bola": "Bola e mola foram para o seu mural!",
+ "certo10_cabrito": "Cabrito e apito foram para o seu mural!",
+ "certo10_foguete": "Foguete e sorvete foram para o seu mural!",
+ "certo10_gato": "Gato e pato foram para o seu mural!",
+ "certo10_passarinho": "Passarinho e ninho foram para o seu mural!",
+ "certo10_rato": "Rato e gato foram para o seu mural!",
+ "certo10_sereia": "Sereia e baleia foram para o seu mural!",
+ "certo10_vela": "Vela e janela foram para o seu mural!",
+ "certo1_balao_mamao": "Isso! Balão e mamão terminam com o mesmo som.",
+ "certo1_boca_bolo": "Isso mesmo! Boca e bolo terminam diferente.",
+ "certo1_boca_foca": "Isso! Boca e foca terminam com o mesmo som.",
+ "certo1_bola_bolsa": "Isso mesmo! Bola e bolsa terminam diferente.",
+ "certo1_bolo_bola": "Isso mesmo! Bolo e bola terminam diferente.",
+ "certo1_cabrito_apito": "Isso! Cabrito e apito terminam com o mesmo som.",
+ "certo1_casa_cachorro": "Isso mesmo! Casa e cachorro terminam diferente.",
+ "certo1_foguete_sorvete": "Isso! Foguete e sorvete terminam com o mesmo som.",
+ "certo1_gato_galinha": "Isso mesmo! Gato e galinha terminam diferente.",
+ "certo1_gato_pato": "Isso! Gato e pato terminam com o mesmo som.",
+ "certo1_mala_macaco": "Isso mesmo! Mala e macaco terminam diferente.",
+ "certo1_passarinho_ninho": "Isso! Passarinho e ninho terminam com o mesmo som.",
+ "certo1_pipoca_panela": "Isso mesmo! Pipoca e panela terminam diferente.",
+ "certo1_porco_pato": "Isso mesmo! Porco e pato terminam diferente.",
+ "certo1_rato_pato": "Isso! Rato e pato terminam com o mesmo som.",
+ "certo1_tomate_abacate": "Isso! Tomate e abacate terminam com o mesmo som.",
+ "certo1_vela_estrela": "Isso! Vela e estrela terminam com o mesmo som.",
+ "certo1_vela_panela": "Isso! Vela e panela terminam com o mesmo som.",
+ "certo2_aviao": "Muito bem! Avião rima com balão. As duas terminam com ão.",
+ "certo2_boca": "Muito bem! Boca rima com pipoca. As duas terminam com oca.",
+ "certo2_cabrito": "Muito bem! Cabrito rima com apito. As duas terminam com ito.",
+ "certo2_foguete": "Muito bem! Foguete rima com sorvete. As duas terminam com ete.",
+ "certo2_gato": "Muito bem! Gato rima com pato. As duas terminam com ato.",
+ "certo2_mamao": "Muito bem! Mamão rima com balão. As duas terminam com ão.",
+ "certo2_passarinho": "Muito bem! Passarinho rima com ninho. As duas terminam com inho.",
+ "certo2_rato": "Muito bem! Rato rima com gato. As duas terminam com ato.",
+ "certo2_tomate": "Muito bem! Tomate rima com abacate. As duas terminam com ate.",
+ "certo2_vela": "Muito bem! Vela rima com estrela. As duas terminam com ela.",
+ "certo3_balao": "Muito bem! Balão rima com mamão. As duas terminam com ão.",
+ "certo3_foca": "Muito bem! Foca rima com pipoca. As duas terminam com oca.",
+ "certo3_janela": "Muito bem! Janela rima com estrela. As duas terminam com ela.",
+ "certo3_mao": "Muito bem! Mão rima com balão. As duas terminam com ão.",
+ "certo3_pato": "Muito bem! Pato rima com rato. As duas terminam com ato.",
+ "certo3_picole": "Muito bem! Picolé rima com café. As duas terminam com é.",
+ "certo3_sereia": "Muito bem! Sereia rima com baleia. As duas terminam com eia.",
+ "certo3_vela": "Muito bem! Vela rima com panela. As duas terminam com ela.",
+ "certo4_balao": "Muito bem! Balão rima com mamão. As duas terminam com ão.",
+ "certo4_boca": "Muito bem! Boca rima com foca. As duas terminam com oca.",
+ "certo4_bola": "Muito bem! Bola rima com mola. As duas terminam com ola.",
+ "certo4_gato": "Muito bem! Gato rima com rato. As duas terminam com ato.",
+ "certo4_mamao": "Muito bem! Mamão rima com balão. As duas terminam com ão.",
+ "certo4_panela": "Muito bem! Panela rima com vela. As duas terminam com ela.",
+ "certo4_pato": "Muito bem! Pato rima com gato. As duas terminam com ato.",
+ "certo4_sorvete": "Muito bem! Sorvete rima com foguete. As duas terminam com ete.",
+ "certo4_vela": "Muito bem! Vela rima com janela. As duas terminam com ela.",
+ "certo5_balao": "Isso! Balão e mamão rimam. As duas terminam com ão.",
+ "certo5_boca": "Isso! Boca e foca rimam. As duas terminam com oca.",
+ "certo5_gato": "Isso! Gato e pato rimam. As duas terminam com ato.",
+ "certo5_passarinho": "Isso! Passarinho e ninho rimam. As duas terminam com inho.",
+ "certo5_rato": "Isso! Rato e gato rimam. As duas terminam com ato.",
+ "certo5_sereia": "Isso! Sereia e baleia rimam. As duas terminam com eia.",
+ "certo5_tomate": "Isso! Tomate e abacate rimam. As duas terminam com ate.",
+ "certo5_vela": "Isso! Vela e estrela rimam. As duas terminam com ela.",
+ "certo6_aviao": "Muito bem! Avião rima com mão. As duas terminam com ão.",
+ "certo6_boca": "Muito bem! Boca rima com pipoca. As duas terminam com oca.",
+ "certo6_cabrito": "Muito bem! Cabrito rima com apito. As duas terminam com ito.",
+ "certo6_estrela": "Muito bem! Estrela rima com panela. As duas terminam com ela.",
+ "certo6_foguete": "Muito bem! Foguete rima com sorvete. As duas terminam com ete.",
+ "certo6_gato": "Muito bem! Gato rima com rato. As duas terminam com ato.",
+ "certo6_janela": "Muito bem! Janela rima com vela. As duas terminam com ela.",
+ "certo6_mamao": "Muito bem! Mamão rima com balão. As duas terminam com ão.",
+ "certo6_pipoca": "Muito bem! Pipoca rima com foca. As duas terminam com oca.",
+ "certo7_aviao": "Isso! Avião e balão rimam. As duas terminam com ão.",
+ "certo7_balao": "Isso! Balão e mamão rimam. As duas terminam com ão.",
+ "certo7_boca": "Isso! Boca e pipoca rimam. As duas terminam com oca.",
+ "certo7_bola": "Isso! Bola e mola rimam. As duas terminam com ola.",
+ "certo7_cabrito": "Isso! Cabrito e apito rimam. As duas terminam com ito.",
+ "certo7_foguete": "Isso! Foguete e sorvete rimam. As duas terminam com ete.",
+ "certo7_gato": "Isso! Gato e pato rimam. As duas terminam com ato.",
+ "certo7_janela": "Isso! Janela e estrela rimam. As duas terminam com ela.",
+ "certo7_passarinho": "Isso! Passarinho e ninho rimam. As duas terminam com inho.",
+ "certo7_picole": "Isso! Picolé e café rimam. As duas terminam com é.",
+ "certo7_rato": "Isso! Rato e gato rimam. As duas terminam com ato.",
+ "certo7_sereia": "Isso! Sereia e baleia rimam. As duas terminam com eia.",
+ "certo7_tomate": "Isso! Tomate e abacate rimam. As duas terminam com ate.",
+ "certo7_vela": "Isso! Vela e estrela rimam. As duas terminam com ela.",
+ "certo8_0": "Isso! Um, dois, feijão com arroz.",
+ "certo8_1": "Isso! Hoje é domingo, pé de cachimbo.",
+ "certo8_2": "Isso! Batatinha quando nasce, esparrama pelo chão.",
+ "certo8_3": "Isso! Rei, capitão, soldado, ladrão, moça bonita do meu coração.",
+ "certo8_4": "Isso! O sapo não lava o pé, não lava porque não quer.",
+ "certo9_aviao": "Muito bem! Avião rima com balão. As duas terminam com ão.",
+ "certo9_boca": "Muito bem! Boca rima com foca. As duas terminam com oca.",
+ "certo9_bola": "Muito bem! Bola rima com mola. As duas terminam com ola.",
+ "certo9_cabrito": "Muito bem! Cabrito rima com apito. As duas terminam com ito.",
+ "certo9_gato": "Muito bem! Gato rima com pato. As duas terminam com ato.",
+ "certo9_mamao": "Muito bem! Mamão rima com balão. As duas terminam com ão.",
+ "certo9_rato": "Muito bem! Rato rima com gato. As duas terminam com ato.",
+ "certo9_vela": "Muito bem! Vela rima com estrela. As duas terminam com ela.",
+ "dica1_balao_mamao": "Fale devagar: balão... mamão. Escute só o FINAL das duas.",
+ "dica1_boca_bolo": "Escute o final: boca... bolo. Terminam igual ou diferente?",
+ "dica1_boca_foca": "Fale devagar: boca... foca. Escute só o FINAL das duas.",
+ "dica1_bola_bolsa": "Escute o final: bola... bolsa. Terminam igual ou diferente?",
+ "dica1_bolo_bola": "Escute o final: bolo... bola. Terminam igual ou diferente?",
+ "dica1_cabrito_apito": "Fale devagar: cabrito... apito. Escute só o FINAL das duas.",
+ "dica1_casa_cachorro": "Escute o final: casa... cachorro. Terminam igual ou diferente?",
+ "dica1_foguete_sorvete": "Fale devagar: foguete... sorvete. Escute só o FINAL das duas.",
+ "dica1_gato_galinha": "Escute o final: gato... galinha. Terminam igual ou diferente?",
+ "dica1_gato_pato": "Fale devagar: gato... pato. Escute só o FINAL das duas.",
+ "dica1_mala_macaco": "Escute o final: mala... macaco. Terminam igual ou diferente?",
+ "dica1_passarinho_ninho": "Fale devagar: passarinho... ninho. Escute só o FINAL das duas.",
+ "dica1_pipoca_panela": "Escute o final: pipoca... panela. Terminam igual ou diferente?",
+ "dica1_porco_pato": "Escute o final: porco... pato. Terminam igual ou diferente?",
+ "dica1_rato_pato": "Fale devagar: rato... pato. Escute só o FINAL das duas.",
+ "dica1_tomate_abacate": "Fale devagar: tomate... abacate. Escute só o FINAL das duas.",
+ "dica1_vela_estrela": "Fale devagar: vela... estrela. Escute só o FINAL das duas.",
+ "dica1_vela_panela": "Fale devagar: vela... panela. Escute só o FINAL das duas.",
+ "dica2_aviao": "Fale o nome da figura: avião. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica2_boca": "Fale o nome da figura: boca. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica2_cabrito": "Fale o nome da figura: cabrito. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica2_foguete": "Fale o nome da figura: foguete. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica2_gato": "Fale o nome da figura: gato. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica2_mamao": "Fale o nome da figura: mamão. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica2_passarinho": "Fale o nome da figura: passarinho. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica2_rato": "Fale o nome da figura: rato. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica2_tomate": "Fale o nome da figura: tomate. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica2_vela": "Fale o nome da figura: vela. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica3_balao": "Fale o nome da figura: balão. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica3_foca": "Fale o nome da figura: foca. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica3_janela": "Fale o nome da figura: janela. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica3_mao": "Fale o nome da figura: mão. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica3_pato": "Fale o nome da figura: pato. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica3_picole": "Fale o nome da figura: picolé. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica3_sereia": "Fale o nome da figura: sereia. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica3_vela": "Fale o nome da figura: vela. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica4_balao": "Fale o nome da figura: balão. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica4_boca": "Fale o nome da figura: boca. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica4_bola": "Fale o nome da figura: bola. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica4_gato": "Fale o nome da figura: gato. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica4_mamao": "Fale o nome da figura: mamão. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica4_panela": "Fale o nome da figura: panela. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica4_pato": "Fale o nome da figura: pato. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica4_sorvete": "Fale o nome da figura: sorvete. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica4_vela": "Fale o nome da figura: vela. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica5_balao": "Fale o nome de cada figura em voz alta e escute o final. Duas delas terminam igual.",
+ "dica5_boca": "Fale o nome de cada figura em voz alta e escute o final. Duas delas terminam igual.",
+ "dica5_gato": "Fale o nome de cada figura em voz alta e escute o final. Duas delas terminam igual.",
+ "dica5_passarinho": "Fale o nome de cada figura em voz alta e escute o final. Duas delas terminam igual.",
+ "dica5_rato": "Fale o nome de cada figura em voz alta e escute o final. Duas delas terminam igual.",
+ "dica5_sereia": "Fale o nome de cada figura em voz alta e escute o final. Duas delas terminam igual.",
+ "dica5_tomate": "Fale o nome de cada figura em voz alta e escute o final. Duas delas terminam igual.",
+ "dica5_vela": "Fale o nome de cada figura em voz alta e escute o final. Duas delas terminam igual.",
+ "dica6_aviao": "Fale o nome da figura: avião. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica6_boca": "Fale o nome da figura: boca. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica6_cabrito": "Fale o nome da figura: cabrito. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica6_estrela": "Fale o nome da figura: estrela. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica6_foguete": "Fale o nome da figura: foguete. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica6_gato": "Fale o nome da figura: gato. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica6_janela": "Fale o nome da figura: janela. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica6_mamao": "Fale o nome da figura: mamão. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica6_pipoca": "Fale o nome da figura: pipoca. Agora escute o final de cada palavra e ache a que termina igual.",
+ "dica7_aviao": "Escute o final de avião e procure do outro lado a que termina igual.",
+ "dica7_balao": "Escute o final de balão e procure do outro lado a que termina igual.",
+ "dica7_boca": "Escute o final de boca e procure do outro lado a que termina igual.",
+ "dica7_bola": "Escute o final de bola e procure do outro lado a que termina igual.",
+ "dica7_cabrito": "Escute o final de cabrito e procure do outro lado a que termina igual.",
+ "dica7_foguete": "Escute o final de foguete e procure do outro lado a que termina igual.",
+ "dica7_gato": "Escute o final de gato e procure do outro lado a que termina igual.",
+ "dica7_janela": "Escute o final de janela e procure do outro lado a que termina igual.",
+ "dica7_passarinho": "Escute o final de passarinho e procure do outro lado a que termina igual.",
+ "dica7_picole": "Escute o final de picolé e procure do outro lado a que termina igual.",
+ "dica7_rato": "Escute o final de rato e procure do outro lado a que termina igual.",
+ "dica7_sereia": "Escute o final de sereia e procure do outro lado a que termina igual.",
+ "dica7_tomate": "Escute o final de tomate e procure do outro lado a que termina igual.",
+ "dica7_vela": "Escute o final de vela e procure do outro lado a que termina igual.",
+ "dica8_0": "Fale a parlenda até o fim e escute: qual palavra combina com o som do final?",
+ "dica8_1": "Fale a parlenda até o fim e escute: qual palavra combina com o som do final?",
+ "dica8_2": "Fale a parlenda até o fim e escute: qual palavra combina com o som do final?",
+ "dica8_3": "Fale a parlenda até o fim e escute: qual palavra combina com o som do final?",
+ "dica8_4": "Fale a parlenda até o fim e escute: qual palavra combina com o som do final?",
+ "dica9_aviao": "A palavra tem que terminar igual a avião. Toque no alto-falante e escute de novo.",
+ "dica9_boca": "A palavra tem que terminar igual a boca. Toque no alto-falante e escute de novo.",
+ "dica9_bola": "A palavra tem que terminar igual a bola. Toque no alto-falante e escute de novo.",
+ "dica9_cabrito": "A palavra tem que terminar igual a cabrito. Toque no alto-falante e escute de novo.",
+ "dica9_gato": "A palavra tem que terminar igual a gato. Toque no alto-falante e escute de novo.",
+ "dica9_mamao": "A palavra tem que terminar igual a mamão. Toque no alto-falante e escute de novo.",
+ "dica9_rato": "A palavra tem que terminar igual a rato. Toque no alto-falante e escute de novo.",
+ "dica9_vela": "A palavra tem que terminar igual a vela. Toque no alto-falante e escute de novo.",
+ "dicapeg_balao": "Cuidado com a pegadinha! Baleia começa parecido, mas rima é o FINAL da palavra, não o começo. Escute de novo só o finalzinho.",
+ "dicapeg_boca": "Cuidado com a pegadinha! Bolo começa parecido, mas rima é o FINAL da palavra, não o começo. Escute de novo só o finalzinho.",
+ "dicapeg_bola": "Cuidado com a pegadinha! Bolsa começa parecido, mas rima é o FINAL da palavra, não o começo. Escute de novo só o finalzinho.",
+ "dicapeg_gato": "Cuidado com a pegadinha! Galinha começa parecido, mas rima é o FINAL da palavra, não o começo. Escute de novo só o finalzinho.",
+ "dicapeg_mamao": "Cuidado com a pegadinha! Mala começa parecido, mas rima é o FINAL da palavra, não o começo. Escute de novo só o finalzinho.",
+ "dicapeg_panela": "Cuidado com a pegadinha! Pato começa parecido, mas rima é o FINAL da palavra, não o começo. Escute de novo só o finalzinho.",
+ "dicapeg_pato": "Cuidado com a pegadinha! Panela começa parecido, mas rima é o FINAL da palavra, não o começo. Escute de novo só o finalzinho.",
+ "dicapeg_sorvete": "Cuidado com a pegadinha! Sereia começa parecido, mas rima é o FINAL da palavra, não o começo. Escute de novo só o finalzinho.",
+ "dicapeg_vela": "Cuidado com a pegadinha! Ferro começa parecido, mas rima é o FINAL da palavra, não o começo. Escute de novo só o finalzinho.",
+ "escreva": "Escreva a palavra que rima.",
+ "fim": "Você chegou ao fim do Bando das Rimas! Agora você sabe ouvir o final das palavras. Olhe o seu mural de rimas ali embaixo.",
+ "p10enun": "Toque nos pares que você mais gostou. Eles vão para o seu mural de rimas.",
+ "p1enun": "Ouça as duas palavras. Elas terminam com o mesmo som?",
+ "p2enun": "Toque na figura que rima com a de cima.",
+ "p3enun": "Pinte a palavra que rima com a figura.",
+ "p4enun": "Cuidado! Uma delas começa parecido, mas não rima. Ache a que rima de verdade.",
+ "p5enun": "Circule as duas figuras que rimam.",
+ "p6enun": "Puxe até a figura de cima a que rima com ela. Tocar também vale.",
+ "p7enun": "Ligue cada figura à que rima com ela.",
+ "p8enun": "Ouça a parlenda e escolha a palavra que fecha a rima.",
+ "p9enun": "Escreva a palavra que rima com a figura.",
+ "pal_abacate": "abacate.",
+ "pal_apito": "apito.",
+ "pal_arroz": "arroz.",
+ "pal_aviao": "avião.",
+ "pal_balao": "balão.",
+ "pal_baleia": "baleia.",
+ "pal_banana": "banana.",
+ "pal_boca": "boca.",
+ "pal_bola": "bola.",
+ "pal_bolo": "bolo.",
+ "pal_bolsa": "bolsa.",
+ "pal_cabrito": "cabrito.",
+ "pal_cachimbo": "cachimbo.",
+ "pal_cachorro": "cachorro.",
+ "pal_cadeira": "cadeira.",
+ "pal_caderno": "caderno.",
+ "pal_cafe": "café.",
+ "pal_campo": "campo.",
+ "pal_caracol": "caracol.",
+ "pal_casa": "casa.",
+ "pal_chapéu": "chapéu.",
+ "pal_chinelo": "chinelo.",
+ "pal_chão": "chão.",
+ "pal_coração": "coração.",
+ "pal_estrela": "estrela.",
+ "pal_ferro": "ferro.",
+ "pal_foca": "foca.",
+ "pal_foguete": "foguete.",
+ "pal_folha": "folha.",
+ "pal_galinha": "galinha.",
+ "pal_gato": "gato.",
+ "pal_gota": "gota.",
+ "pal_janela": "janela.",
+ "pal_laranja": "laranja.",
+ "pal_lata": "lata.",
+ "pal_livro": "livro.",
+ "pal_lupa": "lupa.",
+ "pal_macaco": "macaco.",
+ "pal_mala": "mala.",
+ "pal_mamao": "mamão.",
+ "pal_mao": "mão.",
+ "pal_mola": "mola.",
+ "pal_muro": "muro.",
+ "pal_ninho": "ninho.",
+ "pal_ovo": "ovo.",
+ "pal_panela": "panela.",
+ "pal_passarinho": "passarinho.",
+ "pal_pato": "pato.",
+ "pal_peneira": "peneira.",
+ "pal_picole": "picolé.",
+ "pal_pimenta": "pimenta.",
+ "pal_pipoca": "pipoca.",
+ "pal_pode": "pode.",
+ "pal_porco": "porco.",
+ "pal_pão": "pão.",
+ "pal_queijo": "queijo.",
+ "pal_quer": "quer.",
+ "pal_rato": "rato.",
+ "pal_sabe": "sabe.",
+ "pal_sapato": "sapato.",
+ "pal_sereia": "sereia.",
+ "pal_sorvete": "sorvete.",
+ "pal_tomate": "tomate.",
+ "pal_ursinho": "ursinho.",
+ "pal_uva": "uva.",
+ "pal_vela": "vela.",
+ "pal_xicara": "xicara.",
+ "parl_0": "Um, dois, feijão com arroz.",
+ "parl_1": "Hoje é domingo, pé de cachimbo.",
+ "parl_2": "Batatinha quando nasce, esparrama pelo chão.",
+ "parl_3": "Rei, capitão, soldado, ladrão, moça bonita do meu coração.",
+ "parl_4": "O sapo não lava o pé, não lava porque não quer.",
+ "vozOn": "Narração ligada!"
+};
+/*FALAS-FIM*/
+/*SILMAP-INI*/var SILMAP = {};/*SILMAP-FIM*/
+/*VOZOK-INI*/var VOZOK = {"1gr4pvg": 1, "1roynf5": 1, "khe2l0": 1, "1kv7a4w": 1, "shjmv0": 1, "a52w58": 1, "o85r3c": 1, "10alx5f": 1, "dmjg7e": 1, "gfvm7o": 1, "1kik964": 1, "1yoiwtg": 1, "1h3b0eq": 1, "5hcpwu": 1, "58c74w": 1, "1x3ij31": 1, "hymuix": 1, "sexca2": 1, "7qugy1": 1, "nf903u": 1, "1khhxgd": 1, "120rjhs": 1, "1v7zl3a": 1, "1pkuae8": 1, "813hbs": 1, "1xy6waw": 1, "1fnlgv1": 1, "4f0cvg": 1, "1o32if7": 1, "1isqc8q": 1, "11zqpa9": 1, "1atc512": 1, "1qyxc9c": 1, "5mjo6i": 1, "1r65fvp": 1, "7pz1nv": 1, "7p91go": 1, "gj9j1c": 1, "1iry9d5": 1, "1egrpwl": 1, "g6tuh1": 1, "1czwwje": 1, "1umb1s9": 1, "vecmwv": 1, "1pcfhir": 1, "5a9jhd": 1, "1ax3ume": 1, "c49t4e": 1, "7khpnu": 1, "1ywpbxk": 1, "3h2rq": 1, "13lqsve": 1, "r7904w": 1, "12g0km4": 1, "zmzjqi": 1, "14peqp": 1, "1vh67c5": 1, "aojqro": 1, "16rg4lj": 1, "1bsju5q": 1, "17ak8dr": 1, "wd0p0m": 1, "1r98u1k": 1, "totxmo": 1, "fxvm58": 1, "79hxs5": 1, "1y319at": 1, "157jnri": 1, "93ytl1": 1, "463agp": 1, "i8wo8v": 1, "6703x1": 1, "1ln093w": 1, "1f4fwd8": 1, "4alb8w": 1, "jvy2tp": 1, "14y88ap": 1, "16lxbbd": 1, "10g1htg": 1, "1awlfr0": 1, "198ptsu": 1, "12nz8jy": 1, "pknrn": 1, "1ma5yu1": 1, "1t0azo": 1, "76imbd": 1, "nw33es": 1, "il2iml": 1, "z97mam": 1, "smz1p2": 1, "aghzla": 1, "pvy786": 1, "153hi1k": 1, "nqiyst": 1, "1aw7y0s": 1, "5j5trn": 1, "a7f4jx": 1, "or90vk": 1, "1k5w6lb": 1, "crwdps": 1, "wx4ihu": 1, "f1ngxe": 1, "ipamil": 1, "13k7653": 1, "ykhsjd": 1, "egpj5t": 1, "4i1flo": 1, "17510l0": 1, "10r8bki": 1, "1fc4cf2": 1, "d3sknp": 1, "13jki27": 1, "xz2ja": 1, "1g3sgyn": 1, "r2s4w8": 1, "12i7xjn": 1, "1yphr8u": 1, "o4igp3": 1, "da26nv": 1, "dw9m4j": 1, "m2g9qq": 1, "tl7fmm": 1, "1k52c29": 1, "1mk6akx": 1, "18d2i3i": 1, "c6yo0c": 1, "gy5mik": 1, "1u4de0j": 1, "xoxbdt": 1, "1v09ac9": 1, "19ayaig": 1, "6ust4n": 1, "q3byz3": 1, "lwwu92": 1, "1ld6hjb": 1, "tryd6": 1, "1ltblv9": 1, "18l9mhh": 1, "1464tt4": 1, "1opch20": 1, "pjlzlp": 1, "1sbzdez": 1, "elds9x": 1, "16bssqx": 1, "1c5ml2s": 1, "hc3b4z": 1, "ti17q": 1, "lq3zyl": 1, "1h4iykw": 1, "1m09m4u": 1, "1afarez": 1, "6cvo0": 1, "3b019u": 1, "p7uijn": 1, "hhgs2z": 1, "1ywpagx": 1, "1ujbf0t": 1, "hyyz3g": 1, "1l2tgm3": 1, "1pi4264": 1, "1prwc7j": 1, "9hlosr": 1, "cspxmm": 1, "cr3vmi": 1, "lyfne0": 1, "lwo64f": 1, "ludng9": 1, "ouyico": 1, "12yv52h": 1, "12umqw8": 1, "2wkdqc": 1, "2wk6a3": 1, "2wk6f9": 1, "ote5vc": 1, "1kayisr": 1, "m0uh0r": 1, "m2fqma": 1, "1l6u3aq": 1, "1l6w9az": 1, "2x7vgm": 1, "pfcf3v": 1, "1u8wie2": 1, "2x8g63": 1, "1rjpvcd": 1, "vqf54x": 1, "2xbx7w": 1, "1g6k5of": 1, "hwkm43": 1, "mcmfdz": 1, "2twvb4": 1, "gaeo84": 1, "mdntgn": 1, "i6o98v": 1, "2uezfa": 1, "2uphhy": 1, "1vcg752": 1, "15qrk34": 1, "2vac2b": 1, "nhtr51": 1, "2voweb": 1, "hjre95": 1, "2vw8zu": 1, "o7k1d2": 1, "yivq6i": 1, "2vxvt0": 1, "2wbi32": 1, "rah0md": 1, "yj3gf1": 1, "1637by4": 1, "111svqh": 1, "33qfk1": 1, "tywtn3": 1, "1b5pfnf": 1, "1mavkch": 1, "1aqyh7z": 1, "33sm39": 1, "vfqf6y": 1, "yja3cn": 1, "1bxm5ra": 1, "33y37c": 1, "37vy6b": 1, "38iqse": 1, "181h06r": 1, "15c77oi": 1, "fc74kn": 1, "xxr6ct": 1, "175iiv3": 1, "yj4fyh": 1, "355wr9": 1, "1tm4muj": 1, "avpzv": 1, "jss6rb": 1, "18jd2lm": 1, "1xu6cm": 1, "1hsl2ha": 1, "swkns7": 1};/*VOZOK-FIM*/
+
+/* ---------- as palavras: figura, escrita e sílabas ----------
+   ⚠️ As sílabas ficam DECLARADAS, uma a uma. Separar sílaba por regra em
+   JavaScript erra em português (na-vi-o, a-be-lha, li-mão) — e sílaba errada
+   numa folha de alfabetização não é um defeito de tela: ensina errado. */
+var PAL = {
+ bola:["BOLA",["BO","LA"]], bolo:["BOLO",["BO","LO"]], boneca:["BONECA",["BO","NE","CA"]],
+ bolacha:["BOLACHA",["BO","LA","CHA"]], cana:["CANA",["CA","NA"]], casa:["CASA",["CA","SA"]],
+ caneca:["CANECA",["CA","NE","CA"]], cavalo:["CAVALO",["CA","VA","LO"]], copo:["COPO",["CO","PO"]],
+ dado:["DADO",["DA","DO"]], fada:["FADA",["FA","DA"]], gato:["GATO",["GA","TO"]],
+ lata:["LATA",["LA","TA"]], mala:["MALA",["MA","LA"]], mapa:["MAPA",["MA","PA"]],
+ menina:["MENINA",["ME","NI","NA"]], menino:["MENINO",["ME","NI","NO"]], mola:["MOLA",["MO","LA"]],
+ pato:["PATO",["PA","TO"]], pote:["POTE",["PO","TE"]], rato:["RATO",["RA","TO"]],
+ roda:["RODA",["RO","DA"]], rosa:["ROSA",["RO","SA"]], saco:["SACO",["SA","CO"]],
+ sapo:["SAPO",["SA","PO"]], sapato:["SAPATO",["SA","PA","TO"]], tomate:["TOMATE",["TO","MA","TE"]],
+ vaca:["VACA",["VA","CA"]], banana:["BANANA",["BA","NA","NA"]], batata:["BATATA",["BA","TA","TA"]],
+ macaco:["MACACO",["MA","CA","CO"]], tucano:["TUCANO",["TU","CA","NO"]], coruja:["CORUJA",["CO","RU","JA"]],
+ jacare:["JACARÉ",["JA","CA","RÉ"]], navio:["NAVIO",["NA","VI","O"]], limao:["LIMÃO",["LI","MÃO"]],
+ mamao:["MAMÃO",["MA","MÃO"]], maca:["MAÇÃ",["MA","ÇÃ"]], xicara:["XÍCARA",["XÍ","CA","RA"]],
+ tijolo:["TIJOLO",["TI","JO","LO"]], abelha:["ABELHA",["A","BE","LHA"]], abobora:["ABÓBORA",["A","BÓ","BO","RA"]],
+ /* as 20 que o Marcos gerou nas cartelas de 8/set */
+ peixe:["PEIXE",["PEI","XE"]], faca:["FACA",["FA","CA"]], uva:["UVA",["U","VA"]],
+ panela:["PANELA",["PA","NE","LA"]], girafa:["GIRAFA",["GI","RA","FA"]],
+ tesoura:["TESOURA",["TE","SOU","RA"]], pipa:["PIPA",["PI","PA"]], foca:["FOCA",["FO","CA"]],
+ sino:["SINO",["SI","NO"]], vela:["VELA",["VE","LA"]], mago:["MAGO",["MA","GO"]],
+ boca:["BOCA",["BO","CA"]], lobo:["LOBO",["LO","BO"]],
+ /* cartela D, 8/set — a primeira com fundo magenta (recorte perfeito) */
+ pipoca:["PIPOCA",["PI","PO","CA"]],
+ janela:["JANELA",["JA","NE","LA"]], cebola:["CEBOLA",["CE","BO","LA"]],
+ bota:["BOTA",["BO","TA"]]
+};
+function esc(w){ return PAL[w] ? PAL[w][0] : w.toUpperCase(); }
+function sil(w){ return PAL[w] ? PAL[w][1] : [w.toUpperCase()]; }
+/* ⚠️ A MARCA DE VERSÃO NA FIGURA (set/2026, defeito que chegou ao Marcos).
+   Quando eu troco uma figura, o NOME do arquivo continua o mesmo — e o navegador
+   dele serve a cópia velha do cache. Ele viu preto na alça da xícara numa figura
+   que no repositório já estava limpa. Não adianta consertar o desenho se a
+   criança continua recebendo o antigo: subir o VIMG obriga o navegador a buscar
+   tudo de novo. REGRA: mexeu em figura, sobe o VIMG no mesmo commit. */
+var VIMG = 1;
+/* ⚠️⚠️ `draggable="false"` NÃO É DETALHE (set/2026, três horas de caça).
+   Toda imagem é arrastável de fábrica no navegador. Quando a criança apertava
+   a figura e puxava, o Chrome começava o SEU arrasto nativo do `<img>` e
+   disparava um `pointercancel` — o nosso arrasto morria no primeiro milímetro,
+   sem erro nenhum na tela. Com isto desligado, o gesto é nosso. */
+function img(w, cls){ return '<img class="' + (cls || "fig") + '" draggable="false" src="img/ri_' + w + '.png?v=' + VIMG + '" alt="' + esc(w) + '">'; }
+
+/* ---------- estado ---------- */
+var ST = {pag: 0, nome: "", folha: null, resp: {}, lig: {}, tent: {}, prontas: {}, inicio: 0};
+var vozLigada = true, _narr = null, vozPtBR = null, ATIVA = null;
+var CHAVE_LS = "bando_das_rimas_1ano";
+/* ⚠️ A FILA DO ALFABETO É A FOLHA 1 (parecer pedagógico, set/2026 — ver
+   `PARECER-PEDAGOGICO.md`). O currículo de Blumenau abre o 1º ano com *"nomear
+   as letras do alfabeto e ordená-las"*, o Marcos pediu "sequência alfabética"
+   no encargo, e não havia folha nenhuma disso. O lugar dela é o começo: ordenar
+   letra é o degrau anterior a tudo o que vem depois. */
+var NOMES = ["Rima ou não rima?", "Qual rima com esta?", "Pinte a que rima",
+             "Cuidado com a pegadinha!", "Circule as duas que rimam",
+             "Puxe a que rima", "Ligue quem rima", "Complete a parlenda",
+             "Escreva a palavra que rima", "A rima que eu escolhi"];
+var CORES = ["c1", "c2", "c3", "c4", "c5", "c1", "c2", "c3", "c4", "c5"];
+var ALFABETO = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+/* ---------- som ---------- */
+var AC = null;
+function ac(){ try{ if(!AC) AC = new (window.AudioContext || window.webkitAudioContext)(); if(AC.state === "suspended") AC.resume(); }catch(e){} return AC; }
+function bip(f, dur, tipo, vol){
+  var a = ac(); if(!a) return;
+  try{
+    var o = a.createOscillator(), g = a.createGain();
+    o.type = tipo || "sine"; o.frequency.value = f;
+    g.gain.setValueAtTime(vol || .13, a.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001, a.currentTime + dur);
+    o.connect(g); g.connect(a.destination); o.start(); o.stop(a.currentTime + dur);
+  }catch(e){}
+}
+function sPasso(){ bip(560, .07, "triangle", .08); }
+function sTecla(){ bip(760, .05, "square", .05); }
+function sCerto(){ bip(680, .1, "sine", .12); setTimeout(function(){ bip(920, .14, "sine", .12); }, 95); }
+function sErro(){ bip(190, .17, "sawtooth", .07); }
+function sFesta(){ [523, 659, 784, 1047].forEach(function(f, i){ setTimeout(function(){ bip(f, .16, "sine", .12); }, i * 110); }); }
+function sPalma(){ bip(1200, .04, "square", .07); setTimeout(function(){ bip(420, .06, "sawtooth", .05); }, 18); }
+
+/* ---------- voz ---------- */
+function chaveVoz(t){
+  t = (t || "").replace(/\s+/g, " ").trim().toLowerCase();
+  var h = 5381, i;
+  for(i = 0; i < t.length; i++) h = ((h * 33) ^ t.charCodeAt(i)) >>> 0;
+  return h.toString(36);
+}
+function achaVoz(){
+  try{
+    var vs = window.speechSynthesis.getVoices();
+    for(var i = 0; i < vs.length; i++) if((vs[i].lang || "").toLowerCase().indexOf("pt-br") === 0) return vs[i];
+    for(i = 0; i < vs.length; i++) if((vs[i].lang || "").toLowerCase().indexOf("pt") === 0) return vs[i];
+  }catch(e){}
+  return null;
+}
+if(window.speechSynthesis) window.speechSynthesis.onvoiceschanged = function(){ vozPtBR = achaVoz(); };
+function calar(){
+  try{ if(_narr){ _narr.pause(); _narr.currentTime = 0; } }catch(e){}
+  try{ window.speechSynthesis.cancel(); }catch(e){}
+  var b = document.getElementById("bOuvir"); if(b) b.className = "zap ouvir";
+}
+function falarNavegador(t){
+  if(!window.speechSynthesis) return;
+  try{
+    var u = new SpeechSynthesisUtterance(t);
+    u.lang = "pt-BR"; u.rate = .92; if(!vozPtBR) vozPtBR = achaVoz(); if(vozPtBR) u.voice = vozPtBR;
+    window.speechSynthesis.speak(u);
+  }catch(e){}
+}
+var ultimaFala = null;
+function falar(k){
+  var t = FALAS[k]; if(!t) return;
+  ultimaFala = k;
+  if(!vozLigada) return;
+  calar();
+  var b = document.getElementById("bOuvir"); if(b) b.className = "zap ouvir tocando";
+  function fim(){ var x = document.getElementById("bOuvir"); if(x) x.className = "zap ouvir"; }
+  var key = chaveVoz(t);
+  if(VOZOK[key]){
+    if(!_narr){ _narr = new Audio(); _narr.preload = "auto"; }
+    _narr.onended = fim; _narr.onerror = function(){ falarNavegador(t); setTimeout(fim, 2500); };
+    _narr.src = "audio/ri_" + key + ".mp3";
+    try{ _narr.currentTime = 0; }catch(e){}
+    var p = _narr.play(); if(p && p["catch"]) p["catch"](function(){ fim(); });
+    return;
+  }
+  falarNavegador(t); setTimeout(fim, Math.min(12000, 400 + t.length * 62));
+}
+/* ⭐⭐ A SÍLABA VEM DA PALAVRA (set/2026 — ordem do Marcos: *"a pronúncia das
+   sílabas precisa ser precisa e melhorada, use alguma ferramenta profissional"*).
+
+   `audio/al_sb_<palavra>_<i>.mp3` não foi sintetizado como fragmento solto: é um
+   RECORTE do áudio em que a voz leu as sílabas daquela palavra, cortado nos
+   marcadores de tempo que o próprio serviço devolve (ver
+   `_padrao/silabas_voz.py`). Por isso "bo" de BOLA e "bo" de BOLO soam
+   diferentes — como devem.
+
+   Se o recorte não existir (atividade ainda sem gravar), cai para a fala de
+   reserva `sb_<SÍLABA>`, que é o caminho antigo. Rede de segurança, não padrão. */
+function falarSilaba(palavra, i, silaba){
+  if(!vozLigada) return;
+  if(!palavra && silaba && SILMAP[silaba]){ palavra = SILMAP[silaba][0]; i = SILMAP[silaba][1]; }
+  if(!palavra){ if(silaba) falar("sb_" + silaba); return; }
+  calar();
+  if(!_narr){ _narr = new Audio(); _narr.preload = "auto"; }
+  _narr.onended = null;
+  _narr.onerror = function(){ if(silaba) falar("sb_" + silaba); };
+  _narr.src = "audio/ri_sb_" + palavra + "_" + i + ".mp3";
+  try{ _narr.currentTime = 0; }catch(e){}
+  var pr = _narr.play(); if(pr && pr["catch"]) pr["catch"](function(){ if(silaba) falar("sb_" + silaba); });
+}
+function falarDepois(k, ms){ setTimeout(function(){ falar(k); }, ms || 0); }
+
+/* ---------- utilidades ---------- */
+function el(tag, cls, html){ var e = document.createElement(tag); if(cls) e.className = cls; if(html != null) e.innerHTML = html; return e; }
+function salvar(){ try{ ST.quando = Date.now(); localStorage.setItem(CHAVE_LS, JSON.stringify(ST)); }catch(e){} }
+function carregar(){ try{ var s = localStorage.getItem(CHAVE_LS); if(!s) return null; var o = JSON.parse(s); if(!o || !o.quando || Date.now() - o.quando > 55 * 60 * 1000 || !o.folha) return null; return o; }catch(e){ return null; } }
+function tentativa(id, ok){ if(!ST.tent[id]) ST.tent[id] = {erros: 0, ok: false}; if(ok) ST.tent[id].ok = true; else ST.tent[id].erros++; salvar(); }
+function rnd(n){ return Math.floor(Math.random() * n); }
+function baralha(a){ var b = a.slice(), i, j, t; for(i = b.length - 1; i > 0; i--){ j = rnd(i + 1); t = b[i]; b[i] = b[j]; b[j] = t; } return b; }
+function pega(pool, qtd){ return baralha(pool).slice(0, Math.min(qtd, pool.length)); }
+function confete(n){
+  var c = document.getElementById("confete"), cores = ["#6d5ae6", "#ffd233", "#15a34a", "#e0562f", "#1179bf"], i;
+  for(i = 0; i < n; i++){
+    (function(i){
+      var d = el("div", "cf");
+      d.style.left = rnd(100) + "%"; d.style.top = "-20px";
+      d.style.background = cores[rnd(cores.length)];
+      d.style.animationDelay = (i * 26) + "ms";
+      c.appendChild(d); setTimeout(function(){ if(d.parentNode) c.removeChild(d); }, 1900 + i * 26);
+    })(i);
+  }
+}
+
+/* ---------- registro das respostas (o boletim e o relatório leem daqui) ---------- */
+var RESP = {};   /* id -> {certo, pag} */
+function registra(id, pag, certo){ RESP[id] = {certo: certo, pag: pag}; }
+function acertou(id, fala){
+  if(ST.resp[id]) return;
+  tentativa(id, true); ST.resp[id] = 1; salvar(); sCerto();
+  if(fala) falar(fala);
+  setTimeout(function(){ confereFolha(RESP[id].pag); }, 850);
+}
+function errou(id, dica){
+  tentativa(id, false); sErro();
+  falar(ST.tent[id].erros >= 2 && dica ? dica : "quase");
+}
+
+/* ---------- sorteio da folha ---------- */
+function novaFolha(){
+  /* ⚠️ A FOLHA SORTEIA, o pote é maior. Cada sessão traz um conjunto diferente,
+     e o "treinar o que faltou" não repete o que ela já viu. */
+  return {
+    p1: pega(ITENS.p1, 12), p2: pega(ITENS.p2, 8), p3: pega(ITENS.p3, 7),
+    p4: pega(ITENS.p4, 7), p5: pega(ITENS.p5, 6), p6: pega(ITENS.p6, 7),
+    p7: pega(ITENS.p7, 3), p8: pega(ITENS.p8, 5), p9: pega(ITENS.p9, 7),
+    p10: pega(ITENS.p10, 8)
+  };
+}
+</script>
+<script src="folhas.js"></script>
+</body></html>
