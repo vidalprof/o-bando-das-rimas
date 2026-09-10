@@ -790,11 +790,11 @@ function idsDaPagina(pi){
   if(pi === 4) for(i = 0; i < F.p4.length; i++) ids.push("r4_" + i);
   if(pi === 5) for(i = 0; i < F.p5.length; i++) ids.push("r5_" + i);
   if(pi === 6) for(i = 0; i < F.p6.length; i++) ids.push("r6_" + i);
-  if(pi === 7) for(i = 0; i < F.p7.length; i++) for(k = 0; k < F.p7[i].length; k++) ids.push("l7g" + i + "_k" + k);
+  if(pi === 7) for(i = 0; i < F.p7.length; i++) for(k = 0; k < F.p7[i].length; k++)
+    ids.push("l7l7g" + i + "_" + F.p7[i][k].e);
   if(pi === 8) for(i = 0; i < F.p8.length; i++) ids.push("r8_" + i);
   if(pi === 9) for(i = 0; i < F.p9.length; i++) ids.push("r9_" + i);
   if(pi === 10) for(i = 0; i < F.p10.length; i++) ids.push("r10_" + i);
-  if(pi === 11) for(i = 0; i < F.p11.length; i++) for(k = 0; k < F.p11[i].length; k++) ids.push("r11_" + i + "_" + F.p11[i][k]);
   return ids;
 }
 function pendentes(pi){
@@ -863,7 +863,7 @@ function fim(){
   var pc = tot ? prim / tot : 0;
   var cheias = pc >= .85 ? 3 : pc >= .6 ? 2 : 1, est = "", ke;
   for(ke = 0; ke < 3; ke++)
-    est += '<img src="img/al_estrela' + (ke < cheias ? "" : "_off") + '.png?v=6" alt="" draggable="false">';
+    est += '<img src="img/ri_estrela' + (ke < cheias ? "" : "_off") + '.png?v=' + VIMG + '" alt="" draggable="false">';
   document.getElementById("estrelas").innerHTML = est;
   document.getElementById("estrelas").setAttribute("aria-label", cheias + " de 3 estrelas");
   var bar = document.getElementById("barras"); bar.innerHTML = "";
@@ -876,8 +876,26 @@ function fim(){
       setTimeout(function(){ b.querySelector("i").style.width = (t ? p / t * 100 : 0) + "%"; }, 400);
     })(pi);
   }
-  document.getElementById("resumo").textContent =
-    (ST.nome || "Você") + ", você acertou de primeira " + prim + " de " + tot + " itens.";
+  /* ⭐ O PARECER DA CRIANÇA (mudança de set/2026 — ver o bloco dos OBJETIVOS).
+     O currículo de Blumenau diz que a avaliação orienta *"o professor E O
+     ESTUDANTE acerca de quais objetivos foram alcançados"*, e que *"mostrar o
+     que sabe ou o que não sabe é pertinente, faz parte do crescimento e não da
+     exclusão"*. Então ela vê o que já sabe — na linguagem dela, sem número,
+     sem a palavra "errou" e sem porcentagem.
+     ⚠️ A ORDEM IMPORTA: primeiro o que ela JÁ SABE, sempre; o "vale treinar" vem
+     depois e no máximo dois, senão a lista vira boletim de defeitos. */
+  var jaSabe = [], treinar = [], q;
+  for(q = 0; q < OBJETIVOS.length; q++){
+    var Oq = OBJETIVOS[q], mq = mede(Oq.f);
+    if(mq.tot === 0) continue;
+    (mq.pc >= 75 ? jaSabe : treinar).push(mq.pc >= 75 ? Oq.ok : Oq.n.toLowerCase());
+  }
+  var txt = "";
+  if(jaSabe.length) txt = "Você já sabe " + jaSabe.slice(0, 3).join("; ") + ".";
+  else txt = "Você começou a ouvir o fim das palavras — isso é o mais difícil!";
+  if(treinar.length) txt += " Vale treinar mais: " + treinar.slice(0, 2).join(" e ") + ".";
+  document.getElementById("resumo").innerHTML =
+    "<b>" + esch(ST.nome || "Você") + "</b>, " + txt.charAt(0).toLowerCase() + txt.slice(1);
   sFesta(); confete(40); falar("fim");
 }
 (function(){
@@ -889,57 +907,135 @@ function fim(){
   m.addEventListener("pointerleave", larga);
   m.addEventListener("pointercancel", larga);
 })();
-/* O QUE CADA FOLHA MEDE — é isto que vira a frase do "dominou".
-   ⚠️ O relatório é do PROFESSOR, não da criança: aqui pode haver porcentagem e
-   o nome técnico da habilidade. Na tela da criança, nunca (§FIM-DE-ATIVIDADE). */
-var HABILIDADE = [
-  "reconhecer a letra que falta na palavra",
-  "contar as sílabas da palavra batendo palma",
-  "descobrir a ordem que se repete numa sequência",
-  "identificar a sílaba inicial",
-  "marcar a sílaba com que a palavra começa",
-  "identificar a sílaba final",
-  "identificar a sílaba do meio",
-  "escrever a sílaba que falta",
-  "ordenar as sílabas e formar a palavra",
-  "juntar a sílaba inicial à figura certa"
+/* ============================================================
+   O QUE A ATIVIDADE MEDE — e como isso vira PARECER e NOTA
+
+   ⭐ PEDIDO DO MARCOS (set/2026): *"acho interessante ter um relatório, tipo uma
+   avaliação descritiva sobre o que o aluno conseguiu dominar nesses objetivos
+   das atividades"* e *"algo que dê para converter em nota"*.
+
+   ⭐⭐ E A REGRA DA CASA MUDOU AQUI — o Marcos mandou conferir e ele tinha razão:
+   *"essa regra pode ser alterada, consulta do pedagogo e do currículo seria
+   interessante"*. Fui ao currículo de Blumenau e ele diz, com todas as letras:
+
+     · a avaliação *"está a serviço de orientar o professor E O ESTUDANTE acerca
+       de quais objetivos de aprendizagem foram alcançados"* — o estudante é
+       destinatário da avaliação, não só o professor;
+     · e, citado com aprovação (Pinto, 2016, p. 120): *"na perspectiva do sujeito
+       histórico-cultural, MOSTRAR O QUE SABE OU O QUE NÃO SABE É PERTINENTE,
+       faz parte do crescimento e NÃO DA EXCLUSÃO"*.
+
+   Ou seja: esconder da criança o que ela domina não era exigência pedagógica —
+   era escolha nossa, e o currículo aponta para o contrário. Então a criança
+   PASSA A VER o parecer dela, na linguagem dela.
+
+   ⚠️ O QUE NÃO MUDA É O NÚMERO. A Instrução Normativa SEMED nº 1/2017, art. 3º,
+   citada no currículo, manda avaliar *"com PREPONDERÂNCIA DOS ASPECTOS
+   QUALITATIVOS SOBRE OS QUANTITATIVOS"*. Então o parecer vai para a criança e a
+   NOTA fica com o professor: não por medo do número, mas porque o currículo diz
+   qual dos dois deve pesar na frente dela.
+
+   ⚠️ E O CRITÉRIO DA NOTA É EXPOSTO POR EXIGÊNCIA, não por capricho: a mesma
+   Instrução manda *"a exposição de critérios utilizados em cada um dos
+   instrumentos avaliativos"*. Por isso a linha "1,0 de primeira, 0,6 com ajuda"
+   aparece impressa no relatório.
+
+   ⚠️ E NÃO SE CONTA TUDO IGUAL. Quem acerta de primeira e quem acerta depois de
+   duas dicas não sabem a mesma coisa. Acerto de primeira vale 1,0; acerto com
+   ajuda vale 0,6. O relatório mostra os dois números lado a lado, para o
+   professor ver a nota E o esforço que ela custou.
+   ============================================================ */
+var PESO_PRIMEIRA = 1.0, PESO_COM_AJUDA = 0.6;
+
+/* OS OBJETIVOS — e quais folhas medem cada um.
+   ⚠️ Isto NÃO é a lista de folhas: é a lista do que a criança tem que SABER.
+   Duas folhas podem medir a mesma coisa com gestos diferentes, e para o
+   professor interessa o que ela domina, não em qual tela. */
+var OBJETIVOS = [
+  {n: "Perceber que duas palavras rimam", f: [1],
+   ok: "ouve duas palavras e sabe dizer se terminam igual",
+   nao: "ainda não separa o som do fim do resto da palavra"},
+  {n: "Reconhecer a rima entre opções", f: [2, 3, 6],
+   ok: "acha, entre três, a palavra que rima com a figura",
+   nao: "ainda escolhe pelo desenho ou pelo sentido, não pelo som"},
+  {n: "O critério: rima é o FIM, não o começo", f: [4],
+   ok: "não cai na pegadinha — sabe que começar igual não é rimar",
+   nao: "confunde começo com fim (o erro de achar que BOLA rima com BOLSA)"},
+  {n: "Procurar o par numa lista", f: [5, 7],
+   ok: "acha sozinha o par que rima no meio de várias figuras",
+   nao: "reconhece a rima quando lhe mostram, mas ainda não a procura"},
+  {n: "A rima na parlenda (oralidade)", f: [8],
+   ok: "completa o verso com a palavra que fecha a rima",
+   nao: "ainda não usa o ritmo do verso para prever a palavra"},
+  {n: "Produzir a palavra que rima", f: [9],
+   ok: "escreve, sem opções na tela, uma palavra que rima",
+   nao: "reconhece a rima, mas ainda não a produz sozinha"}
 ];
+
+/* mede um objetivo: devolve acertos de primeira, com ajuda, total e pontos */
+function mede(folhas){
+  var prim = 0, ajuda = 0, tot = 0, k, j;
+  for(k = 0; k < folhas.length; k++){
+    var ids = idsDaPagina(folhas[k]);
+    tot += ids.length;
+    for(j = 0; j < ids.length; j++){
+      var t = ST.tent[ids[j]];
+      if(!t || !t.ok) continue;
+      if(t.erros === 0) prim++; else ajuda++;
+    }
+  }
+  return {prim: prim, ajuda: ajuda, tot: tot,
+          pontos: prim * PESO_PRIMEIRA + ajuda * PESO_COM_AJUDA,
+          pc: tot ? Math.round(100 * prim / tot) : 0};
+}
+
 function abreRelatorio(){
   var r = document.getElementById("relatorio");
-  var linhas = "", fracas = [], dominou = [], pi, geralAcertos = 0, geralTotal = 0;
-  for(pi = 1; pi <= NOMES.length; pi++){
-    var ids = idsDaPagina(pi), t = ids.length, p = 0, ruins = 0, feitos = 0, j;
-    for(j = 0; j < ids.length; j++){
-      var tt = ST.tent[ids[j]];
-      if(tt && tt.ok) feitos++;
-      if(tt && tt.erros === 0 && tt.ok) p++;
-      if(tt && tt.erros >= 2) ruins++;
-    }
-    geralAcertos += p; geralTotal += t;
-    /* ⚠️ AS DUAS LISTAS SÃO COMPLEMENTARES — 75% é a única linha que decide.
-       Na primeira versão a folha entrava em "Retomar" se tivesse UM item com
-       duas tentativas, e aí a mesma folha aparecia em "Já domina" e em
-       "Retomar" ao mesmo tempo. Para o professor isso não é informação: é
-       ruído. Quem precisou de dica já está na coluna da tabela. */
-    var pcf = t ? Math.round(100 * p / t) : 0;
-    if(pcf >= 75) dominou.push(HABILIDADE[pi - 1]);
-    else fracas.push(NOMES[pi - 1] + " (" + pcf + "%)");
-    linhas += "<tr><td>" + pi + ". " + NOMES[pi - 1] + "</td><td>" + p + "/" + t +
-      "</td><td><b>" + pcf + "%</b></td><td>" + ruins + "</td></tr>";
+  var linhas = "", domina = [], retomar = [], k;
+  var pontos = 0, total = 0, primG = 0, ajudaG = 0;
+
+  for(k = 0; k < OBJETIVOS.length; k++){
+    var O = OBJETIVOS[k], m = mede(O.f);
+    pontos += m.pontos; total += m.tot; primG += m.prim; ajudaG += m.ajuda;
+    /* ⚠️ 75% é a ÚNICA linha que decide, e as duas listas são complementares:
+       um objetivo não pode aparecer em "domina" e em "retomar" ao mesmo tempo —
+       para o professor isso não é informação, é ruído. */
+    if(m.pc >= 75) domina.push(O.ok);
+    else retomar.push(O.n.toLowerCase() + " (" + m.pc + "%)");
+    linhas += "<tr><td>" + esch(O.n) + "</td><td>" + m.prim + "/" + m.tot +
+      "</td><td><b>" + m.pc + "%</b></td><td>" + m.ajuda + "</td></tr>";
   }
-  var pc = geralTotal ? Math.round(100 * geralAcertos / geralTotal) : 0;
-  var conceito = pc >= 85 ? "Dominou" : pc >= 60 ? "Está construindo" : "Precisa retomar";
-  var h = "<b>Relatório do professor</b> &mdash; " + esch(ST.nome || "(sem nome)") + " &middot; " +
+
+  /* ⭐ A NOTA. É de 0 a 10, com um decimal, e sai dos PONTOS — não dos acertos
+     crus: 1,0 de primeira, 0,6 com ajuda. */
+  var nota = total ? Math.round(100 * pontos / total) / 10 : 0;
+  var pc = total ? Math.round(100 * primG / total) : 0;
+  var conceito = nota >= 8.5 ? "Dominou" : nota >= 6 ? "Está construindo" : "Precisa retomar";
+
+  /* ⭐ O PARECER EM PALAVRAS — a "avaliação descritiva" que o Marcos pediu.
+     Não é uma frase de efeito: é a lista do que ela SABE FAZER, escrita como o
+     professor escreveria no parecer bimestral. */
+  var nome = esch(ST.nome || "O aluno");
+  var parecer = nome + " ";
+  if(domina.length === OBJETIVOS.length)
+    parecer += "domina a rima em todos os degraus avaliados: " + domina.join("; ") + ".";
+  else if(domina.length)
+    parecer += "já " + domina.join("; ") + ". Ainda precisa retomar: " + retomar.join(", ") + ".";
+  else
+    parecer += "está começando a construir a noção de rima. Nenhum objetivo chegou a 75% " +
+      "de acerto de primeira — vale retomar oralmente, com parlendas e cantigas, antes de " +
+      "voltar à tela.";
+
+  var h = "<b>Relatório do professor</b> &mdash; " + nome + " &middot; " +
     Math.round((Date.now() - (ST.inicio || Date.now())) / 60000) + " min" +
-    "<div class='notao'><span class='nn'>" + pc + "%</span>" +
-    "<span class='nl'>" + geralAcertos + " de " + geralTotal + " acertos de primeira<br><b>" +
-    conceito + "</b></span></div>" +
-    "<table><tr><th>Folha</th><th>De primeira</th><th>%</th><th>Precisou de dica</th></tr>" +
-    linhas + "</table>";
-  h += "<p style='margin:10px 0 0'><b>Já domina:</b> " +
-    (dominou.length ? dominou.join("; ") + "." : "ainda nenhuma habilidade com 75% ou mais.") + "</p>";
-  h += "<p style='margin:6px 0 0'><b>Retomar:</b> " +
-    (fracas.length ? fracas.join(", ") + "." : "nada — foi bem nas dez folhas.") + "</p>";
+    "<div class='notao'><span class='nn'>" + nota.toFixed(1).replace(".", ",") + "</span>" +
+    "<span class='nl'><b>" + conceito + "</b><br>" + primG + " de " + total +
+    " de primeira (" + pc + "%)<br>" + ajudaG + " com ajuda</span></div>" +
+    "<p class='parecer'>" + parecer + "</p>" +
+    "<table><tr><th>Objetivo</th><th>De primeira</th><th>%</th><th>Com ajuda</th></tr>" +
+    linhas + "</table>" +
+    "<p class='comonota'>Nota de 0 a 10: acerto de primeira vale 1,0 e acerto com ajuda vale 0,6. " +
+    "A criança não vê este número — ele fica só aqui.</p>";
   r.innerHTML = h; r.style.display = "block"; sPasso();
 }
 function esch(t){
