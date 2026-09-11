@@ -590,6 +590,25 @@ img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:n
 @-webkit-keyframes cai{to{transform:translateY(105vh) rotate(560deg);opacity:0}}
 @keyframes cai{to{transform:translateY(105vh) rotate(560deg);opacity:0}}
 .oculto{display:none!important}
+/*<dossie-css>*/
+#dossie{display:none;position:fixed;inset:0;z-index:70;background:rgba(20,16,45,.72);
+  align-items:center;justify-content:center;padding:12px}
+#dossie.aberto{display:-webkit-box;display:-ms-flexbox;display:flex}
+#dossie .cx{background:#fff;border:4px solid #6d5ae6;border-radius:20px;padding:14px;
+  max-width:720px;width:100%;max-height:88vh;display:flex;flex-direction:column}
+#dossie h3{margin:0 0 6px;color:#6d5ae6;font-size:20px}
+#dsCorpo{overflow:auto;text-align:left;font-size:13px;line-height:1.5;color:var(--texto,#1e2334)}
+#dsCorpo table{border-collapse:collapse;width:100%;margin:8px 0}
+#dsCorpo th,#dsCorpo td{border:1px solid #d9ddf2;padding:6px 8px;text-align:left;vertical-align:top}
+#dsCorpo th{background:#eceefa;color:var(--texto2,#2c3350)}
+#dsCorpo .dobj{display:block;margin-top:4px;font-size:11.5px;color:var(--texto3,#3b4064)}
+#dsCorpo .dfonte{margin:0 0 6px}
+#dsCorpo .dsub{margin:12px 0 4px}
+#dsCorpo .dtxt{margin:0}
+#dsCorpo .descada,#dsCorpo .dev{margin:4px 0 0 18px;padding:0}
+#dossie #dsFechar{margin-top:10px;min-height:46px}
+.bdossie{display:block;width:100%;margin-top:10px;min-height:46px}
+/*</dossie-css>*/
 </style></head><body>
 
 <div id="topo">
@@ -637,7 +656,8 @@ img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:n
     <h3>Menu do professor</h3>
     <p>Chave mestra <b>1275@</b>. Abra qualquer folha para conferir; o trabalho da criança não se apaga.</p>
     <div class="folhas" id="mpFolhas"></div>
-    <button class="bt cinza" id="mpFechar">Fechar</button>
+    <!--<dossie-bt>--><button class="bt" id="bDossie">Dossiê pedagógico (currículo da rede)</button><!--</dossie-bt>-->
+<button class="bt cinza" id="mpFechar">Fechar</button>
   </div>
 </div>
 
@@ -1773,6 +1793,82 @@ var NOMES = ["Rima ou não rima?", "Qual rima com esta?", "Pinte a que rima",
              "Cuidado com a pegadinha!", "Circule as duas que rimam",
              "Puxe a que rima", "Ligue quem rima", "Complete a parlenda",
              "Escreva a palavra que rima", "A rima que eu escolhi"];
+/*<dossie-dados>*/
+var CURRICULO = {
+ "ano": 1,
+ "componente": "Alfabetização e Língua Portuguesa",
+ "rede": "Currículo da Educação Básica do Sistema Municipal de Ensino de Blumenau",
+ "documento": "_curriculo/blumenau.txt",
+ "degrau": 2,
+ "evidencia": [
+  "Jogada do começo ao fim no navegador, item por item, antes de publicar.",
+  "Leiaute medido em 6 tamanhos de tela: nenhuma figura cortada e nenhum alvo de toque menor que 40 px.",
+  "Toda tela é narrada com voz real; as sílabas são recortadas de dentro da palavra gravada, nunca sintetizadas soltas.",
+  "Uma amostra das falas é ouvida por reconhecimento automático de voz e comparada com o texto escrito.",
+  "Contraste do texto medido no pixel real do fundo, não na folha de estilo.",
+  "As habilidades citadas neste dossiê são conferidas, palavra por palavra, contra o currículo da rede."
+ ],
+ "objetivos": [
+  {
+   "objetivo": "Perceber que duas palavras rimam",
+   "folhas": [
+    1
+   ],
+   "pratica": "Análise linguística/semiótica (alfabetização)",
+   "objeto": "Construção do sistema alfabético",
+   "habilidade": "HABILIDADE: \"Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas iniciais, mediais e finais.\""
+  },
+  {
+   "objetivo": "Reconhecer a rima entre opções",
+   "folhas": [
+    2,
+    3,
+    6
+   ],
+   "pratica": "Análise linguística/semiótica (alfabetização)",
+   "objeto": "Construção do sistema alfabético",
+   "habilidade": "HABILIDADE: \"Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas iniciais, mediais e finais.\""
+  },
+  {
+   "objetivo": "O critério: rima é o FIM, não o começo",
+   "folhas": [
+    4
+   ],
+   "pratica": "Análise linguística/semiótica (alfabetização)",
+   "objeto": "Construção do sistema alfabético",
+   "habilidade": "HABILIDADE: \"Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas iniciais, mediais e finais.\""
+  },
+  {
+   "objetivo": "Procurar o par numa lista",
+   "folhas": [
+    5,
+    7
+   ],
+   "pratica": "Análise linguística/semiótica (alfabetização)",
+   "objeto": "Construção do sistema alfabético",
+   "habilidade": "HABILIDADE: \"Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas iniciais, mediais e finais.\""
+  },
+  {
+   "objetivo": "A rima na parlenda (oralidade)",
+   "folhas": [
+    8
+   ],
+   "pratica": "Oralidade",
+   "objeto": "Produção de texto oral",
+   "habilidade": "HABILIDADE: \"Recitar parlendas, quadras, quadrinhas, trava-línguas, com entonação adequada e observando as rimas.\""
+  },
+  {
+   "objetivo": "Produzir a palavra que rima",
+   "folhas": [
+    9
+   ],
+   "pratica": "Oralidade",
+   "objeto": "Produção de texto oral",
+   "habilidade": "HABILIDADE: \"Recitar parlendas, quadras, quadrinhas, trava-línguas, com entonação adequada e observando as rimas.\""
+  }
+ ]
+};
+/*</dossie-dados>*/
 var CORES = ["c1", "c2", "c3", "c4", "c5", "c1", "c2", "c3", "c4", "c5"];
 var ALFABETO = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
@@ -1916,5 +2012,14 @@ function novaFolha(){
   };
 }
 </script>
+<!--<dossie-html>-->
+<div id="dossie" role="dialog" aria-label="Dossiê pedagógico" aria-modal="true">
+  <div class="cx">
+    <h3>Dossiê pedagógico</h3>
+    <div id="dsCorpo"></div>
+    <button class="bt cinza" id="dsFechar">Fechar</button>
+  </div>
+</div>
+<!--</dossie-html>-->
 <script src="folhas.js"></script>
 </body></html>

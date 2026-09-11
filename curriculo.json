@@ -1,0 +1,74 @@
+{
+  "ano": 1,
+  "componente": "Alfabetização e Língua Portuguesa",
+  "rede": "Currículo da Educação Básica do Sistema Municipal de Ensino de Blumenau",
+  "documento": "_curriculo/blumenau.txt",
+  "degrau": 2,
+  "evidencia": [
+    "Jogada do começo ao fim no navegador, item por item, antes de publicar.",
+    "Leiaute medido em 6 tamanhos de tela: nenhuma figura cortada e nenhum alvo de toque menor que 40 px.",
+    "Toda tela é narrada com voz real; as sílabas são recortadas de dentro da palavra gravada, nunca sintetizadas soltas.",
+    "Uma amostra das falas é ouvida por reconhecimento automático de voz e comparada com o texto escrito.",
+    "Contraste do texto medido no pixel real do fundo, não na folha de estilo.",
+    "As habilidades citadas neste dossiê são conferidas, palavra por palavra, contra o currículo da rede."
+  ],
+  "objetivos": [
+    {
+      "objetivo": "Perceber que duas palavras rimam",
+      "folhas": [
+        1
+      ],
+      "pratica": "Análise linguística/semiótica (alfabetização)",
+      "objeto": "Construção do sistema alfabético",
+      "habilidade": "HABILIDADE: \"Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas iniciais, mediais e finais.\""
+    },
+    {
+      "objetivo": "Reconhecer a rima entre opções",
+      "folhas": [
+        2,
+        3,
+        6
+      ],
+      "pratica": "Análise linguística/semiótica (alfabetização)",
+      "objeto": "Construção do sistema alfabético",
+      "habilidade": "HABILIDADE: \"Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas iniciais, mediais e finais.\""
+    },
+    {
+      "objetivo": "O critério: rima é o FIM, não o começo",
+      "folhas": [
+        4
+      ],
+      "pratica": "Análise linguística/semiótica (alfabetização)",
+      "objeto": "Construção do sistema alfabético",
+      "habilidade": "HABILIDADE: \"Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas iniciais, mediais e finais.\""
+    },
+    {
+      "objetivo": "Procurar o par numa lista",
+      "folhas": [
+        5,
+        7
+      ],
+      "pratica": "Análise linguística/semiótica (alfabetização)",
+      "objeto": "Construção do sistema alfabético",
+      "habilidade": "HABILIDADE: \"Comparar palavras, identificando semelhanças e diferenças entre sons de sílabas iniciais, mediais e finais.\""
+    },
+    {
+      "objetivo": "A rima na parlenda (oralidade)",
+      "folhas": [
+        8
+      ],
+      "pratica": "Oralidade",
+      "objeto": "Produção de texto oral",
+      "habilidade": "HABILIDADE: \"Recitar parlendas, quadras, quadrinhas, trava-línguas, com entonação adequada e observando as rimas.\""
+    },
+    {
+      "objetivo": "Produzir a palavra que rima",
+      "folhas": [
+        9
+      ],
+      "pratica": "Oralidade",
+      "objeto": "Produção de texto oral",
+      "habilidade": "HABILIDADE: \"Recitar parlendas, quadras, quadrinhas, trava-línguas, com entonação adequada e observando as rimas.\""
+    }
+  ]
+}
