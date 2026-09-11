@@ -40,7 +40,17 @@
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;min-height:100%}
-body{font-family:"Segoe UI",Arial,sans-serif;background:#eef1f7;color:#1e2334;padding-bottom:160px}
+:root{
+  /* ⚠️ OS TOKENS DE COR DA FOLHA VIVA (set/2026). Estes cadernos nasceram sem
+     eles e o portão `_qa/cor_fixa.py` reprovava nove regras em cada um: cor de
+     texto cravada, sem fundo próprio, que num tema diferente vira letra invisível.
+     O motor já tinha `--texto`; a folha viva não. Agora tem, e a peça segue o
+     tema em vez de apostar num. */
+  --texto:#1e2334;        /* o preto do texto corrido */
+  --texto2:#2c3350;       /* o preto dos rótulos de figura */
+  --texto3:#3b4064;       /* o preto mais claro das letras grandes */
+}
+body{font-family:"Segoe UI",Arial,sans-serif;background:#eef1f7;color:var(--texto);padding-bottom:160px}
 #topo{position:-webkit-sticky;position:sticky;top:0;z-index:20;background:#fff;border-bottom:3px solid #6d5ae6;
   box-shadow:0 2px 14px rgba(40,30,90,.13);padding:8px 10px;display:flex;align-items:center;gap:10px;max-width:880px;margin:0 auto}
 #topo .tit{font-weight:800;font-size:15px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -96,20 +106,20 @@ button{font-family:inherit;cursor:pointer}
 .parrima .eou{font-weight:800;color:#6d5ae6;font-size:clamp(15px,4vw,20px);flex:none}
 .figsom{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:0}
 .figsom .fig{height:clamp(70px,17vw,104px)}
-.figsom .rot{font-weight:800;color:#2c3350;font-size:clamp(13px,3.4vw,16px);letter-spacing:.5px}
+.figsom .rot{font-weight:800;color:var(--texto2);font-size:clamp(13px,3.4vw,16px);letter-spacing:.5px}
 
 /* a chamada da folha: "PASSARINHO rima com:" */
 .chamrima{display:flex;flex-direction:column;align-items:center;gap:6px;margin-bottom:10px}
 .chamrima .figgrande{display:block;width:auto;height:clamp(84px,21vw,128px);max-width:100%;
   margin:0 auto;object-fit:contain}
 .chamlin{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center}
-.chamlin b{font-size:clamp(15px,4vw,19px);color:#2c3350;letter-spacing:.5px}
+.chamlin b{font-size:clamp(15px,4vw,19px);color:var(--texto2);letter-spacing:.5px}
 
 /* as opções COM figura (folhas 2, 4 e 6) */
 .op.figbt{display:flex;flex-direction:column;align-items:center;gap:3px;
   min-width:96px;min-height:112px;padding:8px 10px}
 .op.figbt .figop{display:block;width:auto;height:clamp(56px,14vw,80px);max-width:100%;object-fit:contain}
-.rotop{font-weight:800;font-size:clamp(11px,2.9vw,13px);color:#2c3350;letter-spacing:.4px;
+.rotop{font-weight:800;font-size:clamp(11px,2.9vw,13px);color:var(--texto2);letter-spacing:.4px;
   line-height:1.1;word-break:break-word}
 
 /* as opções em PALAVRA, que a folha 08 imprime — e que se PINTAM */
@@ -133,7 +143,7 @@ button{font-family:inherit;cursor:pointer}
 .alvorima .figgrande{display:block;width:auto;height:clamp(80px,20vw,120px);max-width:100%;object-fit:contain}
 
 /* folha 8 — a parlenda e a lacuna que se preenche */
-.parlenda{font-size:clamp(16px,4.2vw,21px);font-weight:700;color:#2c3350;line-height:1.5;
+.parlenda{font-size:clamp(16px,4.2vw,21px);font-weight:700;color:var(--texto2);line-height:1.5;
   text-align:center;margin:4px 6px 8px}
 .lacuna{display:inline-block;min-width:74px;padding:1px 10px;border-bottom:4px solid #6d5ae6;
   color:#6d5ae6;font-weight:900;text-align:center}
@@ -183,11 +193,11 @@ button{font-family:inherit;cursor:pointer}
 .enunlin{display:flex;align-items:center;gap:10px;margin:0 2px}
 .enunlin .enun{flex:1;min-width:0}
 .palin{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:2px}
-.pal{font-weight:900;letter-spacing:2px;font-size:clamp(22px,6vw,34px);color:#1e2334}
+.pal{font-weight:900;letter-spacing:2px;font-size:clamp(22px,6vw,34px);color:var(--texto)}
 
 /* fileira genérica de opções */
 .ops{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:10px}
-.op{min-width:64px;min-height:56px;border:3px solid #d9ddf2;border-radius:16px;background:#fff;color:#1e2334;
+.op{min-width:64px;min-height:56px;border:3px solid #d9ddf2;border-radius:16px;background:#fff;color:var(--texto);
   font-weight:900;font-size:22px;padding:8px 14px;-webkit-transition:transform .1s;transition:transform .1s}
 .op:active{transform:scale(.94)}
 .op.certa{border-color:#15a34a;background:#e7f8ee;color:#0d7736}
@@ -212,7 +222,7 @@ button{font-family:inherit;cursor:pointer}
   justify-content:center;background:#f2efff;border-radius:10px 10px 0 0;font-weight:900;font-size:34px;color:#6d5ae6}
 /* a fila do alfabeto usa o mesmo visual da letra escondida */
 .filalfa{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:10px 0}
-.filalfa .lt{font-weight:900;font-size:clamp(26px,7vw,40px);letter-spacing:2px;color:#3b4064}
+.filalfa .lt{font-weight:900;font-size:clamp(26px,7vw,40px);letter-spacing:2px;color:var(--texto3)}
 .filalfa .buraco{width:52px;height:56px;border-bottom:5px solid #6d5ae6;display:inline-flex;
   align-items:center;justify-content:center;background:#f2efff;border-radius:10px 10px 0 0;
   font-weight:900;font-size:34px;color:#6d5ae6}
@@ -298,7 +308,7 @@ img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:n
 .op.pinta.certa{background:#ffd233;border-color:#d5a800;color:#4a3800}
 .marcax{display:flex;flex-direction:column;gap:8px;align-items:flex-start;margin-top:10px}
 .lx{display:flex;align-items:center;gap:12px;min-height:56px;border:3px solid #d9ddf2;border-radius:16px;
-  background:#fff;padding:6px 16px;font-weight:900;font-size:22px;color:#1e2334;width:100%;max-width:320px}
+  background:#fff;padding:6px 16px;font-weight:900;font-size:22px;color:var(--texto);width:100%;max-width:320px}
 .lx .cx{width:34px;height:34px;border:3px solid #9aa0bd;border-radius:8px;display:inline-flex;align-items:center;
   justify-content:center;font-size:24px;color:#e0562f;flex:none}
 .lx.certa{border-color:#15a34a;background:#e7f8ee}
@@ -330,7 +340,7 @@ img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:n
 /* 8 — escrever a sílaba que falta */
 .silbox{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center;margin:10px 0}
 .sq{min-width:70px;min-height:64px;border:3px solid #d9ddf2;border-radius:14px;background:#fff;display:flex;
-  align-items:center;justify-content:center;font-weight:900;font-size:26px;letter-spacing:2px;color:#1e2334}
+  align-items:center;justify-content:center;font-weight:900;font-size:26px;letter-spacing:2px;color:var(--texto)}
 .sq.vaga{border-style:dashed;border-color:#6d5ae6;background:#f4f2ff;color:#6d5ae6}
 .sq.vaga.ativa{background:#fff;box-shadow:0 0 0 4px rgba(109,90,230,.25)}
 .sq.ok{border-color:#15a34a;background:#e7f8ee;color:#0d7736}
@@ -342,7 +352,7 @@ img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:n
 /* 9 — ordenar as sílabas */
 .tira{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:10px 0}
 .sil{min-width:74px;min-height:58px;border:3px solid #d9ddf2;border-radius:14px;background:#fff;font-weight:900;
-  font-size:24px;letter-spacing:2px;color:#1e2334;-ms-touch-action:none;touch-action:none}
+  font-size:24px;letter-spacing:2px;color:var(--texto);-ms-touch-action:none;touch-action:none}
 .sil.usada{opacity:.28;pointer-events:none}
 .sil.arrastando{opacity:.5}
 .vagas{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:10px 0}
@@ -477,7 +487,7 @@ img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:n
    ⚠️ A NOTA GRANDE fica aqui e SÓ aqui. Na tela da criança nunca aparece
    número: ela vê estrelas e barras. Ver o comentário em `folhas.js`. */
 #relatorio .parecer{margin:10px 0 4px;padding:10px 12px;border-left:5px solid #6d5ae6;
-  background:#fff;border-radius:0 12px 12px 0;font-size:13.5px;line-height:1.55;color:#2c3350}
+  background:#fff;border-radius:0 12px 12px 0;font-size:13.5px;line-height:1.55;color:var(--texto2)}
 #relatorio .comonota{margin:8px 0 0;font-size:11.5px;color:#6a7090;line-height:1.45}
 .notao{display:flex;align-items:center;gap:14px;margin:10px 0 2px;padding:10px 14px;
   border:3px solid #6d5ae6;border-radius:18px;background:#fff}
@@ -571,7 +581,7 @@ img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:n
 #teclado.aberto{display:block}
 #teclado .dica{text-align:center;font-weight:800;color:#5b4fc4;font-size:13px;margin-bottom:6px}
 #tk{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;max-width:560px;margin:0 auto}
-#tk button{min-height:48px;border:0;border-radius:12px;background:#eceefa;color:#1e2334;font-weight:900;font-size:19px;box-shadow:0 3px 0 #d3d7ea}
+#tk button{min-height:48px;border:0;border-radius:12px;background:#eceefa;color:var(--texto);font-weight:900;font-size:19px;box-shadow:0 3px 0 #d3d7ea}
 #tk button:active{transform:translateY(2px);box-shadow:0 1px 0 #d3d7ea}
 #tk button.ap{background:#fde2da;grid-column:span 3}
 #tk button.ok{background:#d9f2e3;grid-column:span 4}
@@ -1837,7 +1847,7 @@ function falar(k){
 /* ⭐⭐ A SÍLABA VEM DA PALAVRA (set/2026 — ordem do Marcos: *"a pronúncia das
    sílabas precisa ser precisa e melhorada, use alguma ferramenta profissional"*).
 
-   `audio/al_sb_<palavra>_<i>.mp3` não foi sintetizado como fragmento solto: é um
+   `audio/ri_sb_<palavra>_<i>.mp3` não foi sintetizado como fragmento solto: é um
    RECORTE do áudio em que a voz leu as sílabas daquela palavra, cortado nos
    marcadores de tempo que o próprio serviço devolve (ver
    `_padrao/silabas_voz.py`). Por isso "bo" de BOLA e "bo" de BOLO soam

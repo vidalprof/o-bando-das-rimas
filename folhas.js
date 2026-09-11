@@ -891,7 +891,12 @@ function fim(){
     (mq.pc >= 75 ? jaSabe : treinar).push(mq.pc >= 75 ? Oq.ok : Oq.n.toLowerCase());
   }
   var txt = "";
-  if(jaSabe.length) txt = "Você já sabe " + jaSabe.slice(0, 3).join("; ") + ".";
+  /* ⚠️ "Você JÁ ..." e não "Você já SABE ..." (set/2026, achado na leitura da
+     tela de fim). Os textos dos OBJETIVOS estão escritos em terceira pessoa
+     ("junta os dois pedaços", "conta as palmas") — que em português é a MESMA
+     forma de "você". Com o "sabe" no meio saía "Você já sabe junta os dois
+     pedaços", e era a PRIMEIRA frase que a criança lia no fim do caderno. */
+  if(jaSabe.length) txt = "Você já " + jaSabe.slice(0, 3).join("; ") + ".";
   else txt = "Você começou a ouvir o fim das palavras — isso é o mais difícil!";
   if(treinar.length) txt += " Vale treinar mais: " + treinar.slice(0, 2).join(" e ") + ".";
   document.getElementById("resumo").innerHTML =
