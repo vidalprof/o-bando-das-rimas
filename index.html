@@ -152,6 +152,21 @@ button{font-family:inherit;cursor:pointer}
 /* folha 9 — a caixa de escrever é LARGA (palavra inteira, não sílaba) */
 .sq.larga{min-width:168px;padding:0 12px}
 
+
+/* ⭐ O botão de terminar a qualquer momento (12/set/2026). Pequeno e de canto:
+   ele existe para o sinal da escola, não para tentar a criança a pular tudo. */
+
+/* ⭐ o aviso de caderno não terminado, no relatório do professor (12/set/2026) */
+.avisoparcial{background:#fff6e5;border:2px solid #e5b93c;border-radius:10px;
+  padding:8px 10px;margin:8px 0;font-size:12.5px;line-height:1.45;color:#6a4b00}
+#relatorio table th:nth-child(4),#relatorio table td:nth-child(4){background:#f3fbf5}
+
+.bt.terminar{background:#eef0f8;color:#5a6080;border:2px solid #d9ddf2;
+  font-size:12px;padding:8px 10px;min-height:44px;font-weight:800;flex:0 0 auto}
+.bt.terminar:active{background:#e2e6f3}
+.barra.naoabriu{opacity:.5}
+.barra.naoabriu b{font-weight:700;font-size:12px;color:#8a8fae}
+
 /* folha 10 — o mural que a criança monta, e que vai para o relatório */
 .mural{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:8px 10px}
 .cartaorima{display:flex;align-items:center;gap:4px;min-height:96px;padding:10px 12px;
@@ -622,12 +637,13 @@ img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:n
 <div id="livro"></div>
 
 <div id="fim">
-  <h2>Caderno completo!</h2>
+  <h2 id="fimTit">Caderno completo!</h2>
   <div class="estrelas" id="estrelas"></div>
   <div class="barras" id="barras"></div>
   <p id="resumo" style="font-weight:800;font-size:16px"></p>
   <div id="medalha" role="button" tabindex="0" aria-label="Troféu. Segure dois segundos para abrir o relatório do professor"><img src="img/ri_trofeu.png?v=1" alt="Troféu" draggable="false" onerror="this.style.display='none';this.parentNode.className='semfig'"></div>
   <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+    <button class="bt verde" id="bVoltar" style="display:none">Voltar para o caderno</button>
     <button class="bt cinza" id="bRever">Rever o caderno</button>
     <button class="bt verde" id="bRecomecar">Caderno novo</button>
   </div>
@@ -646,6 +662,10 @@ img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:n
 <div id="nav">
   <button class="bt cinza" id="bAnt"><i class="seta esq"></i>Anterior</button>
   <div class="txt" id="navTxt"></div>
+  <!-- ⭐ O FECHO A QUALQUER MOMENTO (12/set/2026) — ver o comentário do `fim()`.
+       Discreto de propósito: não pode competir com o "Próxima", mas tem de
+       estar à mão quando o sinal toca. -->
+  <button class="bt terminar" id="bTerminar" aria-label="Terminar agora e ver o meu boletim">Terminar</button>
   <button class="bt" id="bProx">Próxima<i class="seta dir"></i></button>
 </div>
 

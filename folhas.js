@@ -849,16 +849,47 @@ function atualizaNav(){
 }
 
 /* ---------- fim: boletim, medalha e relatório ---------- */
+/* ⭐⭐ O FECHO A QUALQUER MOMENTO (12/set/2026).
+   O Marcos fixou a sequência em no mínimo 25 folhas, e a medida deu razão a ele:
+   é o que enche os 55 min da criança RÁPIDA. Só que a criança DEVAGAR leva ~85
+   min nas mesmas 25 folhas — ela não termina. E até aqui o boletim, o parecer, a
+   medalha e o relatório só existiam DEPOIS da última folha: quem mais precisa do
+   elogio seria a única a nunca vê-lo.
+
+   Agora a criança fecha o caderno quando quiser (botão "Terminar", na barra de
+   baixo) e vê o boletim DO QUE ELA FEZ.
+
+   ⚠️ E o boletim conta só o que ela TENTOU. Folha que ela não chegou a abrir
+      aparece como "ainda não" — jamais como 0 de 8, que transformaria o fecho
+      num boletim de defeitos justamente para quem foi mais devagar. */
 function fim(){
   calar();
+  /* quantas folhas ela chegou a tocar, e quantas ficaram para depois */
+  var abertas = 0, naoAbertas = [], pp;
+  for(pp = 1; pp <= NOMES.length; pp++){
+    var idp = idsDaPagina(pp), algum = false, z;
+    for(z = 0; z < idp.length; z++) if(ST.tent[idp[z]]) { algum = true; break; }
+    if(algum) abertas++; else naoAbertas.push(pp);
+  }
+  var completo = naoAbertas.length === 0;
+  var tf = document.getElementById("fimTit");
+  if(tf) tf.textContent = completo ? "Caderno completo!" : "O seu boletim de hoje";
+  var bv = document.getElementById("bVoltar");
+  if(bv) bv.style.display = completo ? "none" : "";
   for(var i = 0; i < PAGEL.length; i++) PAGEL[i].className = PAGEL[i].className.replace(" viva", "");
   document.getElementById("nav").style.display = "none";
   var f = document.getElementById("fim"); f.style.display = "block";
+  /* ⚠️ o denominador é o que ela TENTOU, não o caderno inteiro: a estrela tem
+     de falar do trabalho dela, não do tempo que a aula tinha. */
   var tot = 0, prim = 0, pi;
   for(pi = 1; pi <= NOMES.length; pi++){
     var ids = idsDaPagina(pi);
-    tot += ids.length;
-    for(var j = 0; j < ids.length; j++){ var t = ST.tent[ids[j]]; if(t && t.erros === 0 && t.ok) prim++; }
+    for(var j = 0; j < ids.length; j++){
+      var t = ST.tent[ids[j]];
+      if(!t) continue;
+      tot++;
+      if(t.erros === 0 && t.ok) prim++;
+    }
   }
   var pc = tot ? prim / tot : 0;
   var cheias = pc >= .85 ? 3 : pc >= .6 ? 2 : 1, est = "", ke;
@@ -869,11 +900,21 @@ function fim(){
   var bar = document.getElementById("barras"); bar.innerHTML = "";
   for(pi = 1; pi <= NOMES.length; pi++){
     (function(pi){
-      var ids = idsDaPagina(pi), t = ids.length, p = 0, j;
-      for(j = 0; j < ids.length; j++){ var tt = ST.tent[ids[j]]; if(tt && tt.erros === 0 && tt.ok) p++; }
-      var b = el("div", "barra", "<span>" + NOMES[pi - 1] + "</span><div class='tr'><i></i></div><b>" + p + "/" + t + "</b>");
+      var ids = idsDaPagina(pi), t = ids.length, p = 0, nt = 0, j;
+      for(j = 0; j < ids.length; j++){
+        var tt = ST.tent[ids[j]];
+        if(tt) nt++;
+        if(tt && tt.erros === 0 && tt.ok) p++;
+      }
+      /* folha que ela não abriu não vira zero: vira "ainda não" */
+      if(nt === 0){
+        bar.appendChild(el("div", "barra naoabriu",
+          "<span>" + NOMES[pi - 1] + "</span><div class='tr'></div><b>ainda não</b>"));
+        return;
+      }
+      var b = el("div", "barra", "<span>" + NOMES[pi - 1] + "</span><div class='tr'><i></i></div><b>" + p + "/" + nt + "</b>");
       bar.appendChild(b);
-      setTimeout(function(){ b.querySelector("i").style.width = (t ? p / t * 100 : 0) + "%"; }, 400);
+      setTimeout(function(){ b.querySelector("i").style.width = (nt ? p / nt * 100 : 0) + "%"; }, 400);
     })(pi);
   }
   /* ⭐ O PARECER DA CRIANÇA (mudança de set/2026 — ver o bloco dos OBJETIVOS).
@@ -887,8 +928,11 @@ function fim(){
   var jaSabe = [], treinar = [], q;
   for(q = 0; q < OBJETIVOS.length; q++){
     var Oq = OBJETIVOS[q], mq = mede(Oq.f);
-    if(mq.tot === 0) continue;
-    (mq.pc >= 75 ? jaSabe : treinar).push(mq.pc >= 75 ? Oq.ok : Oq.n.toLowerCase());
+    /* ⚠️ objetivo que ela NÃO CHEGOU a tentar não entra no "vale treinar":
+       seria cobrar dela a folha que a aula não deu tempo de alcançar. */
+    if(mq.tot === 0 || !mq.tent) continue;
+    var pcq = Math.round(100 * mq.prim / mq.tent);
+    (pcq >= 75 ? jaSabe : treinar).push(pcq >= 75 ? Oq.ok : Oq.n.toLowerCase());
   }
   var txt = "";
   /* ⚠️ "Você JÁ ..." e não "Você já SABE ..." (set/2026, achado na leitura da
@@ -899,8 +943,19 @@ function fim(){
   if(jaSabe.length) txt = "Você já " + jaSabe.slice(0, 3).join("; ") + ".";
   else txt = "Você começou a ouvir o fim das palavras — isso é o mais difícil!";
   if(treinar.length) txt += " Vale treinar mais: " + treinar.slice(0, 2).join(" e ") + ".";
-  document.getElementById("resumo").innerHTML =
-    "<b>" + esch(ST.nome || "Você") + "</b>, " + txt.charAt(0).toLowerCase() + txt.slice(1);
+  /* ⭐ o quanto ela andou é FATO e entra celebrado, nunca como cobrança */
+  if(!completo)
+    txt = "você fez " + abertas + " de " + NOMES.length + " folhas hoje — e olhe o "
+        + "que já dá para ver: " + txt.charAt(0).toLowerCase() + txt.slice(1);
+  /* ⚠️ DEFEITO ANTIGO, achado ao testar o fecho (12/set/2026): sem nome digitado
+     a linha saía **"Você, você já entende…"** — o prefixo caía no "Você" e o
+     texto do parecer também começa com "Você". Só aparecia para a criança que
+     não escreve o nome na capa, que é justamente a que mais precisa que a tela
+     fale direito com ela. Sem nome, não há prefixo. */
+  var quem = (ST.nome || "").replace(/^\s+|\s+$/g, "");
+  document.getElementById("resumo").innerHTML = quem
+    ? "<b>" + esch(quem) + "</b>, " + txt.charAt(0).toLowerCase() + txt.slice(1)
+    : txt.charAt(0).toUpperCase() + txt.slice(1);
   sFesta(); confete(40); falar("fim");
 }
 (function(){
@@ -979,17 +1034,18 @@ var OBJETIVOS = [
 
 /* mede um objetivo: devolve acertos de primeira, com ajuda, total e pontos */
 function mede(folhas){
-  var prim = 0, ajuda = 0, tot = 0, k, j;
+  var prim = 0, ajuda = 0, tot = 0, tentados = 0, k, j;
   for(k = 0; k < folhas.length; k++){
     var ids = idsDaPagina(folhas[k]);
     tot += ids.length;
     for(j = 0; j < ids.length; j++){
       var t = ST.tent[ids[j]];
+      if(t) tentados++;      /* ⭐ o que ela chegou a tocar */
       if(!t || !t.ok) continue;
       if(t.erros === 0) prim++; else ajuda++;
     }
   }
-  return {prim: prim, ajuda: ajuda, tot: tot,
+  return {prim: prim, ajuda: ajuda, tot: tot, tent: tentados,
           pontos: prim * PESO_PRIMEIRA + ajuda * PESO_COM_AJUDA,
           pc: tot ? Math.round(100 * prim / tot) : 0};
 }
@@ -997,32 +1053,67 @@ function mede(folhas){
 function abreRelatorio(){
   var r = document.getElementById("relatorio");
   var linhas = "", domina = [], retomar = [], k;
-  var pontos = 0, total = 0, primG = 0, ajudaG = 0;
+  var pontos = 0, total = 0, primG = 0, ajudaG = 0, tentG = 0;
+  var naoAlcancou = [];
+  /* ⭐ ATÉ ONDE ELA CHEGOU — o professor precisa saber disto ANTES de ler
+     qualquer porcentagem (ver a coluna "do que fez", logo abaixo). */
+  var folhasFeitas = 0, fz;
+  for(fz = 1; fz <= NOMES.length; fz++){
+    var idf = idsDaPagina(fz), tocou = false, y;
+    for(y = 0; y < idf.length; y++) if(ST.tent[idf[y]]) { tocou = true; break; }
+    if(tocou) folhasFeitas++;
+  }
+  var inteiro = folhasFeitas >= NOMES.length;
 
   for(k = 0; k < OBJETIVOS.length; k++){
     var O = OBJETIVOS[k], m = mede(O.f);
     pontos += m.pontos; total += m.tot; primG += m.prim; ajudaG += m.ajuda;
+    tentG += m.tent;
     /* ⚠️ 75% é a ÚNICA linha que decide, e as duas listas são complementares:
        um objetivo não pode aparecer em "domina" e em "retomar" ao mesmo tempo —
        para o professor isso não é informação, é ruído. */
-    if(m.pc >= 75) domina.push(O.ok);
-    else retomar.push(O.n.toLowerCase() + " (" + m.pc + "%)");
+    /* ⚠️⚠️ O QUE DECIDE É O QUE ELA FEZ (12/set/2026). Antes, num caderno não
+       terminado, o objetivo cujas folhas ela nem alcançou entrava em "retomar"
+       com 0% — e o parecer do professor dizia "precisa retomar" de uma criança
+       que tinha ido bem no que deu tempo de fazer. Isso é pior que não ter
+       parecer: é um julgamento errado com cara de medida.
+       Objetivo que ela NÃO TOCOU não entra em lista nenhuma; os que ela tocou
+       são julgados pelo desempenho DELES. */
+    var pcObj = m.tent ? Math.round(100 * m.prim / m.tent) : -1;
+    if(pcObj < 0) naoAlcancou.push(O.n.toLowerCase());
+    else if(pcObj >= 75) domina.push(O.ok);
+    else retomar.push(O.n.toLowerCase() + " (" + pcObj + "%)");
+    /* ⭐ A COLUNA "DO QUE FEZ" (12/set/2026) — nasceu junto com o fecho a
+       qualquer momento. Sem ela o relatório MENTE num caderno não terminado: a
+       criança que fez 4 folhas de 15, e as fez bem, aparecia com 27% — o
+       professor leria "precisa retomar" de quem na verdade só ficou sem tempo.
+       A coluna da direita mostra o desempenho SÓ no que ela chegou a responder. */
+    var pcf = m.tent ? Math.round(100 * m.prim / m.tent) : 0;
     linhas += "<tr><td>" + esch(O.n) + "</td><td>" + m.prim + "/" + m.tot +
-      "</td><td><b>" + m.pc + "%</b></td><td>" + m.ajuda + "</td></tr>";
+      "</td><td><b>" + m.pc + "%</b></td><td>" +
+      (m.tent ? "<b>" + pcf + "%</b> <small>(" + m.prim + "/" + m.tent + ")</small>"
+              : "<small>não fez</small>") + "</td><td>" + m.ajuda + "</td></tr>";
   }
 
   /* ⭐ A NOTA. É de 0 a 10, com um decimal, e sai dos PONTOS — não dos acertos
      crus: 1,0 de primeira, 0,6 com ajuda. */
-  var nota = total ? Math.round(100 * pontos / total) / 10 : 0;
-  var pc = total ? Math.round(100 * primG / total) : 0;
-  var conceito = nota >= 8.5 ? "Dominou" : nota >= 6 ? "Está construindo" : "Precisa retomar";
+  /* ⚠️ A NOTA DE UM CADERNO NÃO TERMINADO SE MEDE NO QUE FOI FEITO. Dividir
+     pelos itens que ela nunca viu dá uma nota que não fala dela — fala do
+     relógio. Quando o caderno está completo, os dois denominadores são o
+     mesmo número e nada muda. */
+  var baseNota = inteiro ? total : tentG;
+  var nota = baseNota ? Math.round(100 * pontos / baseNota) / 10 : 0;
+  var pc = baseNota ? Math.round(100 * primG / baseNota) : 0;
+  var conceito = !baseNota ? "Sem dados" :
+    nota >= 8.5 ? "Dominou" : nota >= 6 ? "Está construindo" : "Precisa retomar";
+  if(!inteiro) conceito += " (parcial)";
 
   /* ⭐ O PARECER EM PALAVRAS — a "avaliação descritiva" que o Marcos pediu.
      Não é uma frase de efeito: é a lista do que ela SABE FAZER, escrita como o
      professor escreveria no parecer bimestral. */
   var nome = esch(ST.nome || "O aluno");
   var parecer = nome + " ";
-  if(domina.length === OBJETIVOS.length)
+  if(domina.length && !retomar.length && !naoAlcancou.length)
     parecer += "domina a rima em todos os degraus avaliados: " + domina.join("; ") + ".";
   else if(domina.length)
     parecer += "já " + domina.join("; ") + ". Ainda precisa retomar: " + retomar.join(", ") + ".";
@@ -1031,13 +1122,26 @@ function abreRelatorio(){
       "de acerto de primeira — vale retomar oralmente, com parlendas e cantigas, antes de " +
       "voltar à tela.";
 
+
+  /* ⚠️ o que a aula não deu tempo de alcançar é INFORMAÇÃO para o professor,
+     nunca falha da criança — por isso frase própria, e no fim. */
+  if(naoAlcancou.length)
+    parecer += " Ainda não chegou a fazer (a aula acabou antes): " +
+               naoAlcancou.join(", ") + ".";
+
   var h = "<b>Relatório do professor</b> &mdash; " + nome + " &middot; " +
     Math.round((Date.now() - (ST.inicio || Date.now())) / 60000) + " min" +
     "<div class='notao'><span class='nn'>" + nota.toFixed(1).replace(".", ",") + "</span>" +
-    "<span class='nl'><b>" + conceito + "</b><br>" + primG + " de " + total +
+    "<span class='nl'><b>" + conceito + "</b><br>" + primG + " de " + baseNota +
     " de primeira (" + pc + "%)<br>" + ajudaG + " com ajuda</span></div>" +
     "<p class='parecer'>" + parecer + "</p>" +
-    "<table><tr><th>Objetivo</th><th>De primeira</th><th>%</th><th>Com ajuda</th></tr>" +
+    (inteiro ? "" :
+      "<p class='avisoparcial'><b>Caderno não terminado:</b> " + folhasFeitas +
+      " de " + NOMES.length + " folhas. A coluna <b>%</b> conta o caderno inteiro; " +
+      "a coluna <b>do que fez</b> conta só o que a criança chegou a responder — " +
+      "é esta que diz como ela foi.</p>") +
+    "<table><tr><th>Objetivo</th><th>De primeira</th><th>%</th>" +
+    "<th>do que fez</th><th>Com ajuda</th></tr>" +
     linhas + "</table>" +
     "<p class='comonota'>Nota de 0 a 10: acerto de primeira vale 1,0 e acerto com ajuda vale 0,6. " +
     "A criança não vê este número — ele fica só aqui.</p>";
@@ -1213,3 +1317,20 @@ function fechaDossie(){ document.getElementById("dossie").className = ""; }
   }
 }());
 /*</dossie-js>*/
+
+/* ⭐ o botão "Terminar" e o "Voltar para o caderno" — ver o comentário do fim() */
+(function(){
+  var bt = document.getElementById("bTerminar");
+  if(bt) bt.onclick = function(){
+    var falta = 0, pz;
+    for(pz = 1; pz <= NOMES.length; pz++) falta += pendentes(pz);
+    if(falta && !confirm("Quer fechar o caderno e ver o seu boletim?\n\nVocê pode voltar depois e continuar de onde parou."))
+      return;
+    fim();
+  };
+  var bv = document.getElementById("bVoltar");
+  if(bv) bv.onclick = function(){
+    document.getElementById("fim").style.display = "none";
+    vaiPara(ST.pag || 1);
+  };
+})();
