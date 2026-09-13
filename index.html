@@ -689,6 +689,28 @@ img{-webkit-user-drag:none;-khtml-user-drag:none;-moz-user-drag:none;user-drag:n
 
 <script>
 /* ---------- AS PALAVRAS DE CADA FOLHA (o gerar_falas.py lê este bloco) ---------- */
+/*GESTOS-INI*/
+/* ⚠️ O GESTO DE CADA FOLHA, DECLARADO À MÃO — uma palavra: o que a criança FAZ
+   com o dedo, não o que o código parece. Ele existe porque o portão 0b7
+   (`_qa/leque_folha.py`) tentou ADIVINHAR isto do código e errou feio: "Ligue
+   cada figura ao seu pedaço" saiu como *arrastar* e "Pinte só os balões" saiu
+   como *ligar*, e três cadernos foram reprovados por conta do erro do portão.
+   Gesto é decisão de quem monta, então quem monta escreve.
+   ⚠️ Folha nova = linha nova AQUI, no mesmo commit. Sem isso o portão diz
+      "NAO MEDI" — que não é "passou". */
+var GESTOS = {
+ "f1": "explorar",
+ "f2": "escolher",
+ "f3": "achar o par",
+ "f4": "marcar varios",
+ "f5": "ligar",
+ "f6": "achar o intruso",
+ "f7": "classificar",
+ "f8": "completar",
+ "f9": "escrever",
+ "f10": "mural"
+};
+/*GESTOS-FIM*/
 /*ITENS-INI*/
 var ITENS = {
  "p1": [
