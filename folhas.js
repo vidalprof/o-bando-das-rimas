@@ -8,6 +8,8 @@
    ============================================================ */
 
 var livro = document.getElementById("livro"), PAGEL = [];
+/* a posição da folha de LIGAR — o único id que não nasce de `r<pi>_` */
+var LIGAR = 10;
 
 function faixa(d, i, titulo){ d.appendChild(el("div", "faixa", '<div class="num">' + i + '</div><h2>' + titulo + '</h2>')); }
 function aoAbrir(d, fn){ if(!d._aoAbrir) d._aoAbrir = []; d._aoAbrir.push(fn); }
@@ -264,11 +266,11 @@ function sobre(ev, alvo){
    palavras SEMPRE têm alto-falante, porque rima é coisa de ouvido: quem
    decidir pelo desenho está fazendo outra atividade. */
 function f1(d, pi){
-  faixa(d, pi, NOMES[0]);
-  enunciado(d, pi, "Ouça as duas palavras. Elas <b>terminam com o mesmo som</b>?", "p1enun");
-  var L = ST.folha.p1;
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "Ouça as duas palavras. Elas <b>terminam com o mesmo som</b>?", "p" + pi + "enun");
+  var L = ST.folha["p" + pi];
   for(var i = 0; i < L.length; i++){
-    var it = L[i], id = "r1_" + i;
+    var it = L[i], id = "r" + pi + "_" + i;
     var box = item(i + 1);
     var par = el("div", "parrima");
     par.appendChild(figComSom(it.a));
@@ -278,7 +280,7 @@ function f1(d, pi){
     opcoes(box, pi, id, [
       {v: "sim", rot: "RIMA", aria: "Rima"},
       {v: "nao", rot: "NÃO RIMA", aria: "Não rima"}
-    ], it.r ? "sim" : "nao", "grande", "certo1_" + it.a + "_" + it.b, "dica1_" + it.a + "_" + it.b);
+    ], it.r ? "sim" : "nao", "grande", "certo" + pi + "_" + it.a + "_" + it.b, "dica" + pi + "_" + it.a + "_" + it.b);
     fechaItem(d, box, id, 0);
   }
 }
@@ -295,17 +297,17 @@ function figComSom(w){
 /* 2 — QUAL RIMA COM ESTA? (folhas 06, 17 e 18: "PASSARINHO rima com:")
    Fiel: a figura grande à esquerda e três figuras à direita, como no papel. */
 function f2(d, pi){
-  faixa(d, pi, NOMES[1]);
-  enunciado(d, pi, "Toque na figura que <b>rima</b> com a de cima.", "p2enun");
-  var L = ST.folha.p2;
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "Toque na figura que <b>rima</b> com a de cima.", "p" + pi + "enun");
+  var L = ST.folha["p" + pi];
   for(var i = 0; i < L.length; i++){
-    var it = L[i], id = "r2_" + i;
+    var it = L[i], id = "r" + pi + "_" + i;
     var box = item(i + 1);
     box.appendChild(chamada(it.f, "rima com:"));
     opcoes(box, pi, id, it.op.map(function(w){
       return {v: w, rot: img(w, "figop") + '<span class="rotop">' + esc(w.toUpperCase()) + "</span>",
               aria: w, fala: "pal_" + w};
-    }), it.c, "figbt", "certo2_" + it.f, "dica2_" + it.f);
+    }), it.c, "figbt", "certo" + pi + "_" + it.f, "dica" + pi + "_" + it.f);
     fechaItem(d, box, id, 0);
   }
 }
@@ -326,17 +328,17 @@ function chamada(w, texto){
    assim que a folha 08 é, e é mais difícil de propósito (a criança lê). O
    alto-falante em cada uma é o que impede a folha de virar loteria. */
 function f3(d, pi){
-  faixa(d, pi, NOMES[2]);
-  enunciado(d, pi, "<b>Pinte</b> a palavra que rima com a figura.", "p3enun");
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "<b>Pinte</b> a palavra que rima com a figura.", "p" + pi + "enun");
   estojo(d);
-  var L = ST.folha.p3;
+  var L = ST.folha["p" + pi];
   for(var i = 0; i < L.length; i++){
-    var it = L[i], id = "r3_" + i;
+    var it = L[i], id = "r" + pi + "_" + i;
     var box = item(i + 1);
     box.appendChild(chamada(it.f, "rima com:"));
     opcoes(box, pi, id, it.op.map(function(w){
       return {v: w, rot: esc(w.toUpperCase()), aria: w, fala: "pal_" + w};
-    }), it.c, "pintavel", "certo3_" + it.f, "dica3_" + it.f, function(b){
+    }), it.c, "pintavel", "certo" + pi + "_" + it.f, "dica" + pi + "_" + it.f, function(b){
       b.style.background = LAPIS[LAPIS_ESCOLHIDO][1];
       b.style.borderColor = LAPIS[LAPIS_ESCOLHIDO][1];
       b.style.color = "#fff";
@@ -352,18 +354,18 @@ function f3(d, pi){
    ⚠️ Aqui o erro na pegadinha ganha dica PRÓPRIA, que diz o que olhar: o
    COMEÇO é igual, mas rima é o FIM. */
 function f4(d, pi){
-  faixa(d, pi, NOMES[3]);
-  enunciado(d, pi, "Uma delas <b>começa</b> parecido mas <b>não rima</b>. Ache a que rima de verdade.", "p4enun");
-  var L = ST.folha.p4;
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "Uma delas <b>começa</b> parecido mas <b>não rima</b>. Ache a que rima de verdade.", "p" + pi + "enun");
+  var L = ST.folha["p" + pi];
   for(var i = 0; i < L.length; i++){
-    var it = L[i], id = "r4_" + i;
+    var it = L[i], id = "r" + pi + "_" + i;
     var box = item(i + 1);
     box.appendChild(chamada(it.f, "rima com:"));
     (function(it2, id2){
       opcoes(box, pi, id2, it2.op.map(function(w){
         return {v: w, rot: img(w, "figop") + '<span class="rotop">' + esc(w.toUpperCase()) + "</span>",
                 aria: w, fala: "pal_" + w};
-      }), it2.c, "figbt", "certo4_" + it2.f, "dicapeg_" + it2.f);
+      }), it2.c, "figbt", "certo" + pi + "_" + it2.f, "dicapeg_" + it2.f);
     })(it, id);
     fechaItem(d, box, id, 0);
   }
@@ -373,11 +375,11 @@ function f4(d, pi){
    O comando impresso é CIRCULAR, então aqui se circula de verdade: a criança
    risca em volta com o dedo (ou toca, que também vale). */
 function f5(d, pi){
-  faixa(d, pi, NOMES[4]);
-  enunciado(d, pi, "<b>Circule</b> as <b>duas</b> figuras que rimam.", "p5enun");
-  var L = ST.folha.p5;
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "<b>Circule</b> as <b>duas</b> figuras que rimam.", "p" + pi + "enun");
+  var L = ST.folha["p" + pi];
   for(var i = 0; i < L.length; i++){
-    var it = L[i], id = "r5_" + i;
+    var it = L[i], id = "r" + pi + "_" + i;
     registra(id, pi, it.c.join(","));
     var box = item(i + 1);
     var grade = el("div", "gradecirc"), bts = [];
@@ -394,8 +396,8 @@ function f5(d, pi){
         var mar = bts2.filter(function(b){ return b.className.indexOf("marcada") >= 0; }).map(function(b){ return b._w; });
         if(mar.length < 2) return;
         var ok = mar.length === 2 && it2.c.indexOf(mar[0]) >= 0 && it2.c.indexOf(mar[1]) >= 0;
-        if(ok){ acertou(id2, "certo5_" + it2.c[0]); }
-        else { errou(id2, "dica5_" + it2.c[0]);
+        if(ok){ acertou(id2, "certo" + pi + "_" + it2.c[0]); }
+        else { errou(id2, "dica" + pi + "_" + it2.c[0]);
                bts2.forEach(function(b){ b.className = "figcirc"; }); }
       }
       riscoDeCircular(grade2, bts2, function(b){
@@ -413,11 +415,11 @@ function f5(d, pi){
    ⚠️ TRÊS CAMINHOS, sempre: arrastar com o mouse, arrastar com o dedo e
    TOCAR. No PC da escola a criança arrasta; no celular, muitas só tocam. */
 function f6(d, pi){
-  faixa(d, pi, NOMES[5]);
-  enunciado(d, pi, "<b>Puxe</b> até a figura de cima a que rima com ela. Tocar também vale.", "p6enun");
-  var L = ST.folha.p6;
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "<b>Puxe</b> até a figura de cima a que rima com ela. Tocar também vale.", "p" + pi + "enun");
+  var L = ST.folha["p" + pi];
   for(var i = 0; i < L.length; i++){
-    var it = L[i], id = "r6_" + i;
+    var it = L[i], id = "r" + pi + "_" + i;
     var box = item(i + 1);
     var alvo = el("div", "alvorima", img(it.f, "figgrande") + '<span class="rotop">' + esc(it.f.toUpperCase()) + "</span>");
     alvo.appendChild(botaoSom("Ouvir " + esc(it.f), (function(w){ return function(){ falar("pal_" + w); }; })(it.f)));
@@ -425,7 +427,7 @@ function f6(d, pi){
     opcoes(box, pi, id, it.op.map(function(w){
       return {v: w, rot: img(w, "figop") + '<span class="rotop">' + esc(w.toUpperCase()) + "</span>",
               aria: w, fala: "pal_" + w};
-    }), it.c, "figbt", "certo6_" + it.f, "dica6_" + it.f, null, alvo);
+    }), it.c, "figbt", "certo" + pi + "_" + it.f, "dica" + pi + "_" + it.f, null, alvo);
     fechaItem(d, box, id, 0);
   }
 }
@@ -434,17 +436,17 @@ function f6(d, pi){
    A folha manda LIGAR, então se puxa uma linha de verdade — e ela também
    aceita tocar de um lado e do outro, para quem não consegue arrastar. */
 function f7(d, pi){
-  faixa(d, pi, NOMES[6]);
-  enunciado(d, pi, "<b>Ligue</b> cada figura à que rima com ela.", "p7enun");
-  var L = ST.folha.p7;
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "<b>Ligue</b> cada figura à que rima com ela.", "p" + pi + "enun");
+  var L = ST.folha["p" + pi];
   for(var i = 0; i < L.length; i++){
     var g = L[i], cx = el("div", "");
-    montaLigar(cx, pi, "l7g" + i, g.map(function(p){
+    montaLigar(cx, pi, "g" + i, g.map(function(p){
       return {k: p.e, w: p.e, wd: p.d,
               esq: img(p.e, "figop") + '<span class="rotop">' + esc(p.e.toUpperCase()) + "</span>",
               dir: img(p.d, "figop") + '<span class="rotop">' + esc(p.d.toUpperCase()) + "</span>",
               fe: "pal_" + p.e, fd: "pal_" + p.d,
-              fc: "certo7_" + p.e, dica: "dica7_" + p.e};
+              fc: "certo" + pi + "_" + p.e, dica: "dica" + pi + "_" + p.e};
     }), d);
     d.appendChild(cx);
   }
@@ -457,11 +459,11 @@ function f7(d, pi){
    completa antes de a cabeça explicar, e aí ela DESCOBRE que sabia de rima
    sem saber o nome. */
 function f8(d, pi){
-  faixa(d, pi, NOMES[7]);
-  enunciado(d, pi, "Ouça a parlenda e escolha a palavra que <b>fecha a rima</b>.", "p8enun");
-  var L = ST.folha.p8;
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "Ouça a parlenda e escolha a palavra que <b>fecha a rima</b>.", "p" + pi + "enun");
+  var L = ST.folha["p" + pi];
   for(var i = 0; i < L.length; i++){
-    var it = L[i], id = "r8_" + i;
+    var it = L[i], id = "r" + pi + "_" + i;
     var box = item(i + 1);
     var lin = el("div", "parlenda");
     lin.innerHTML = esc(it.t).replace("###", '<span class="lacuna">?</span>');
@@ -469,7 +471,7 @@ function f8(d, pi){
     box.appendChild(botaoSom("Ouvir a parlenda", (function(k){ return function(){ falar(k); }; })("parl_" + i)));
     opcoes(box, pi, id, it.op.map(function(w){
       return {v: w, rot: esc(w.toUpperCase()), aria: w, fala: "pal_" + w};
-    }), it.c, "grande", "certo8_" + i, "dica8_" + i, function(b){
+    }), it.c, "grande", "certo" + pi + "_" + i, "dica" + pi + "_" + i, function(b){
       var lc = lin.querySelector(".lacuna");
       if(lc){ lc.className = "lacuna cheia"; lc.innerHTML = b.textContent; }
     });
@@ -481,11 +483,11 @@ function f8(d, pi){
    ⚠️ AS DUAS PORTAS (regra do Marcos): teclado na tela E teclado de verdade.
    No PC da escola tem teclado e a criança vai digitar; no celular, não tem. */
 function f9(d, pi){
-  faixa(d, pi, NOMES[8]);
-  enunciado(d, pi, "<b>Escreva</b> a palavra que rima com a figura.", "p9enun");
-  var L = ST.folha.p9;
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "<b>Escreva</b> a palavra que rima com a figura.", "p" + pi + "enun");
+  var L = ST.folha["p" + pi];
   for(var i = 0; i < L.length; i++){
-    var it = L[i], id = "r9_" + i;
+    var it = L[i], id = "r" + pi + "_" + i;
     var box = item(i + 1);
     box.appendChild(chamada(it.f, "rima com:"));
     (function(it2, id2, box2){
@@ -497,7 +499,7 @@ function f9(d, pi){
       q.onclick = function(){
         if(ST.resp[id2]) return;
         sPasso();
-        ativa(q, it2.c, id2, "certo9_" + it2.f, "dica9_" + it2.f);
+        ativa(q, it2.c, id2, "certo" + pi + "_" + it2.f, "dica" + pi + "_" + it2.f);
         document.getElementById("tkDica").textContent = "Escreva a palavra que rima";
       };
       q.onkeydown = function(ev){ if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); q.onclick(); } };
@@ -511,12 +513,12 @@ function f9(d, pi){
    ⭐ Regra 11 da pesquisa: a tela final mostra o que a CRIANÇA fez, não só a
    nota. Aqui ela monta o próprio mural de rimas, e ele fica no relatório. */
 function f10(d, pi){
-  faixa(d, pi, NOMES[9]);
-  enunciado(d, pi, "Toque nos pares que você mais gostou. Eles vão para o seu <b>mural de rimas</b>.", "p10enun");
-  var L = ST.folha.p10;
+  faixa(d, pi, NOMES[pi - 1]);
+  enunciado(d, pi, "Toque nos pares que você mais gostou. Eles vão para o seu <b>mural de rimas</b>.", "p" + pi + "enun");
+  var L = ST.folha["p" + pi];
   var mural = el("div", "mural");
   for(var i = 0; i < L.length; i++){
-    var it = L[i], id = "r10_" + i;
+    var it = L[i], id = "r" + pi + "_" + i;
     registra(id, pi, it.par);
     (function(it2, id2){
       var cartao = el("button", "cartaorima",
@@ -530,7 +532,7 @@ function f10(d, pi){
         sPasso(); falar("pal_" + it2.f);
         setTimeout(function(){ falar("pal_" + it2.par); }, 700);
         cartao.className = "cartaorima escolhido";
-        acertou(id2, "certo10_" + it2.f);
+        acertou(id2, "certo" + pi + "_" + it2.f);
       };
       if(ST.resp[id2]) cartao.className = "cartaorima escolhido";
       mural.appendChild(cartao);
@@ -783,18 +785,18 @@ document.addEventListener("keydown", function(ev){
 
 /* ---------- folha pronta e navegação ---------- */
 function idsDaPagina(pi){
-  var ids = [], i, k, F = ST.folha;
-  if(pi === 1) for(i = 0; i < F.p1.length; i++) ids.push("r1_" + i);
-  if(pi === 2) for(i = 0; i < F.p2.length; i++) ids.push("r2_" + i);
-  if(pi === 3) for(i = 0; i < F.p3.length; i++) ids.push("r3_" + i);
-  if(pi === 4) for(i = 0; i < F.p4.length; i++) ids.push("r4_" + i);
-  if(pi === 5) for(i = 0; i < F.p5.length; i++) ids.push("r5_" + i);
-  if(pi === 6) for(i = 0; i < F.p6.length; i++) ids.push("r6_" + i);
-  if(pi === 7) for(i = 0; i < F.p7.length; i++) for(k = 0; k < F.p7[i].length; k++)
-    ids.push("l7l7g" + i + "_" + F.p7[i][k].e);
-  if(pi === 8) for(i = 0; i < F.p8.length; i++) ids.push("r8_" + i);
-  if(pi === 9) for(i = 0; i < F.p9.length; i++) ids.push("r9_" + i);
-  if(pi === 10) for(i = 0; i < F.p10.length; i++) ids.push("r10_" + i);
+  /* ⚠️ A POSIÇÃO É A IDENTIDADE — contrato do formato (SEQUENCIAS-DIDATICAS §6).
+     Antes cada folha gravava `r6_0` à mão e esta função repetia a mesma tabela
+     à mão: dois lugares para combinar, e quando a ordem das folhas mudava o
+     relatório do professor saía ZERO com a folha toda respondida, sem erro
+     nenhum. Agora o id nasce da posição, dentro da própria folha. */
+  var ids = [], i, k, L = (ST.folha["p" + pi] || []);
+  if(pi === LIGAR){
+    for(i = 0; i < L.length; i++)
+      for(k = 0; k < L[i].length; k++) ids.push("l" + pi + "g" + i + "_" + L[i][k].e);
+    return ids;
+  }
+  for(i = 0; i < L.length; i++) ids.push("r" + pi + "_" + i);
   return ids;
 }
 function pendentes(pi){
