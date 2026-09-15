@@ -290,8 +290,12 @@ function f1(d, pi){
     par.appendChild(figComSom(it.b));
     box.appendChild(par);
     opcoes(box, pi, id, [
-      {v: "sim", rot: "RIMA", aria: "Rima"},
-      {v: "nao", rot: "NÃO RIMA", aria: "Não rima"}
+      /* ⚠️ VOZ NA OPCAO (Marcos, 15/set/2026): *"precisamos por audio nas
+         opcoes de resposta para quem nao sabe ler, principalmente para os
+         menores"*. Este e o caderno de 1o ano: a crianca de seis anos NAO le
+         "NAO RIMA" — sem a voz ela escolhe pelo tamanho do botao. */
+      {v: "sim", rot: "RIMA", aria: "Rima", fala: "op_rima"},
+      {v: "nao", rot: "NÃO RIMA", aria: "Não rima", fala: "op_naorima"}
     ], it.r ? "sim" : "nao", "grande", "certo" + pi + "_" + it.a + "_" + it.b, "dica" + pi + "_" + it.a + "_" + it.b);
     fechaItem(d, box, id, 0);
   }
