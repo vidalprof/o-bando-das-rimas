@@ -9,7 +9,19 @@
 
 var livro = document.getElementById("livro"), PAGEL = [];
 /* a posição da folha de LIGAR — o único id que não nasce de `r<pi>_` */
-var LIGAR = 10;
+/* ⚠️⚠️ ERA `var LIGAR = 10;` E O NÚMERO ESTAVA TROCADO — defeito medido em
+   15/set/2026 pelo portão novo `_qa/conta_folha.js`, com o caderno JÁ NO AR.
+   Quem liga é a folha 7 ("Ligue quem rima"); a 10 é o mural. Com o 10 aqui:
+     · a folha 7 declarava três ids `r7_0..r7_2` e gravava DOZE `l7g0_*` — ou
+       seja, ela NUNCA FECHAVA: a criança ligava tudo e continuava faltando;
+     · a folha 10 caía no ramo do ligar, que procura `L[i][k].e` dentro de
+       objetos que não têm essa forma, e devolvia ZERO ids — então ela nascia
+       PRONTA, carimbava sozinha e, sendo a última, mandava o caderno direto
+       para o boletim sem a criança tocar em nada.
+   Nenhum portão via: o jogador da banca dizia "ok folha 10: 0 de 0" e o
+   andarilho contava os nove itens desenhados, cada um certo no seu canto. Só
+   cruzando os dois números é que aparece. */
+var LIGAR = [7];
 
 function faixa(d, i, titulo){ d.appendChild(el("div", "faixa", '<div class="num">' + i + '</div><h2>' + titulo + '</h2>')); }
 function aoAbrir(d, fn){ if(!d._aoAbrir) d._aoAbrir = []; d._aoAbrir.push(fn); }
@@ -656,6 +668,78 @@ function estojo(pai){
   });
   pai.appendChild(cx);
 }
+/* ---------- ROLAR A PALAVRA PARA CIMA DO TECLADO ----------
+   ⚠️⚠️ O TECLADO TAPAVA A ATIVIDADE, e o Marcos viu no celular (15/set/2026):
+      *"ele preenche a tela e não dá para ver a atividade"*. Medido: na
+      cruzadinha de 360x640 o teclado ocupava 368 px de 640 e a grade ficava
+      INTEIRA por baixo dele — a criança escrevia às cegas.
+   ⚠️ E A REGRA TEM DOIS DEGRAUS, porque medir só um não bastou:
+      1. se a PALAVRA inteira cabe na faixa que sobra, ela sobe inteira;
+      2. se não cabe (palavra em pé, tela de 320x568 — medido), sobe a CASINHA
+         QUE ESTÁ SENDO ESCRITA, centrada na faixa. É o que um campo de texto
+         faz: mantém à vista a letra que a pessoa está digitando.
+   Por isso ela é chamada duas vezes: ao abrir o teclado e a cada letra.
+   ⚠️⚠️ E ELA ATENDE OS DOIS TECLADOS DA CASA, o que é a lição paga aqui
+      (15/set/2026): há dois desenhos de teclado nos cadernos de folha viva —
+      o da CRUZADINHA, que escreve numa fila de casinhas (`CRUZ.E.cels`), e o
+      da SÍLABA/PALAVRA, que escreve numa quadra só (`ATIVA.q`). Eu escrevi
+      esta função ancorada no primeiro e a enfiei nos dezoito cadernos pelo
+      `function abreCruz(` — que só existe em TRÊS. Nos outros quinze ficou a
+      CHAMADA sem a função: `setTimeout(rolaParaCruz, 60)` estourava
+      ReferenceError e matava o resto de `ativa()`, que era justamente quem
+      escrevia a dica e falava com a criança. O teclado abria mudo.
+      O `node --check` não vê isso (a sintaxe está perfeita); quem vê é o
+      `_qa/funcoes.py`, o portão "função que não existe" — que eu não rodei. */
+function rolaParaCruz(){
+  /* de quem é a vez: a fila da cruzadinha, ou a quadra única do outro teclado */
+  /* ⚠️⚠️ LÊ AS DUAS PELO `window`, e isto NÃO é preciosismo: escrito como
+     `typeof CRUZ !== "undefined" && CRUZ && CRUZ.E`, o `CRUZ` nu depois do `&&`
+     é acusado de `'CRUZ' is not defined` pelo ESLint nos cadernos que não têm
+     cruzadinha (ele não faz análise de fluxo, e o `typeof` só protege a
+     primeira ocorrência). E esse ESLint é o portão 0a2 que roda DENTRO do
+     `entregar.yml`, antes de publicar: com ele vermelho, NADA sobe. Foi assim
+     que quatro publicações minhas falharam seguidas hoje, sem eu entender por
+     quê — e o pré-voo daqui não pega, porque o ESLint não está instalado no
+     container. Como `CRUZ` e `ATIVA` são `var` globais, elas são propriedades
+     de `window`, e ler por ali funciona igual e é declarado. */
+  var cs = [], i, andando = 0;
+  var _cruz = window.CRUZ, _ativa = window.ATIVA;
+  if(_cruz && _cruz.E && _cruz.E.cels){
+    for(i = 0; i < _cruz.E.cels.length; i++)
+      if(_cruz.E.cels[i] && _cruz.E.cels[i].getBoundingClientRect) cs.push(_cruz.E.cels[i]);
+    andando = _cruz.val ? _cruz.val.length : 0;
+  } else if(_ativa && _ativa.q && _ativa.q.getBoundingClientRect){
+    cs.push(_ativa.q);
+  }
+  if(!cs.length) return;
+  var tkel = document.getElementById("teclado");
+  if(!tkel || tkel.className.indexOf("aberto") < 0) return;
+  var tk = tkel.getBoundingClientRect(), topo = 56, pe = tk.top - 10;
+  /* ⚠️ A RESERVA DE ROLAGEM SAI DA ALTURA REAL DO TECLADO, e não de um
+     número fixo. Ela nasceu como `padding-bottom:460px` no `comtec`, que
+     é certo para o teclado de LETRAS (336 px medidos a 360x640, 41
+     teclas) e exagerado para o de NÚMEROS (160 px, 12 teclas): sobravam
+     300 px de vazio para a criança rolar à toa enquanto digita. Como o
+     `comtec` sai da tag `body` ao fechar, a variável pode ficar guardada
+     sem fazer mal nenhum. */
+  document.documentElement.style.setProperty("--tech", Math.ceil(tk.height + 40) + "px");
+  if(pe <= topo) return;
+  var cima = 1e9, baixo = -1e9;
+  for(i = 0; i < cs.length; i++){
+    var r = cs[i].getBoundingClientRect();
+    if(r.top < cima) cima = r.top;
+    if(r.bottom > baixo) baixo = r.bottom;
+  }
+  var d = 0;
+  if(baixo - cima <= pe - topo){
+    if(baixo > pe) d = baixo - pe;
+    if(cima - d < topo) d = cima - topo;
+  } else {
+    var at = cs[Math.min(andando, cs.length - 1)].getBoundingClientRect();
+    d = at.top - (topo + (pe - topo) / 2 - at.height / 2);
+  }
+  if(Math.abs(d) > 2) window.scrollBy(0, d);
+}
 function montaLigar(caixa, pi, tag, pares, pagina){
   var box = el("div", "ligar"), ce = el("div", "col"), cd = el("div", "col");
   var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"); svg.setAttribute("class", "linhas");
@@ -755,6 +839,12 @@ function montaLigar(caixa, pi, tag, pares, pagina){
   q.className = "sq vaga ativa";
   q.innerHTML = '<span class="v"></span><span class="cursor"></span>';
   document.getElementById("teclado").className = "aberto";
+  /* ⚠️ ROLAR A PALAVRA PARA CIMA DO TECLADO. Sem isto a criança escreve às
+     cegas: o teclado é fixo no pé da tela e a grade fica embaixo dele (medido
+     em 360x640: a grade inteira por baixo). O `comtec` dá chão para a página
+     poder rolar; o resto é levar a primeira casinha para a faixa que sobra. */
+  document.body.className = (document.body.className.replace(/ ?comtec/, "") + " comtec").replace(/^ /, "");
+  setTimeout(rolaParaCruz, 60);
   document.getElementById("tkDica").textContent = "Escreva a sílaba que falta";
   falar("escreva");
 }
@@ -762,6 +852,7 @@ function fechaAtiva(){
   if(!ATIVA) return;
   if(!ST.resp[ATIVA.id]){ ATIVA.q.className = "sq vaga"; ATIVA.q.textContent = ""; }
   ATIVA = null; document.getElementById("teclado").className = "";
+  document.body.className = document.body.className.replace(/ ?comtec/, "");
 }
 function digita(ch){
   if(!ATIVA) return;
@@ -778,6 +869,7 @@ function confereSil(){
   if(A.val === A.certa){
     A.q.className = "sq ok"; A.q.textContent = A.certa;
     ATIVA = null; document.getElementById("teclado").className = "";
+    document.body.className = document.body.className.replace(/ ?comtec/, "");
     acertou(A.id, A.fc);
     var it = A.q.parentNode.parentNode; if(it) it.className = "item feito";
   } else {
@@ -823,7 +915,7 @@ function idsDaPagina(pi){
      relatório do professor saía ZERO com a folha toda respondida, sem erro
      nenhum. Agora o id nasce da posição, dentro da própria folha. */
   var ids = [], i, k, L = (ST.folha["p" + pi] || []);
-  if(pi === LIGAR){
+  if(LIGAR.indexOf(pi) > -1){
     for(i = 0; i < L.length; i++)
       for(k = 0; k < L[i].length; k++) ids.push("l" + pi + "g" + i + "_" + L[i][k].e);
     return ids;
@@ -897,6 +989,29 @@ function atualizaNav(){
       aparece como "ainda não" — jamais como 0 de 8, que transformaria o fecho
       num boletim de defeitos justamente para quem foi mais devagar. */
 function fim(){
+  /* ⭐⭐ AVISA O CONTROLE DA SALA QUE ESTA CRIANÇA TERMINOU.
+     Pedido do Marcos (15/set/2026): *"preciso que essas atividades sequências
+     didáticas me avisem quando termino no painel de atividades, aquele que tem
+     o controle da sala, assim como as atividades que fazíamos antes"*.
+
+     ⚠️ E ELAS NÃO AVISAVAM POR CAMINHO NENHUM — conferido no código do
+     laboratório antes de escrever isto. A tela do aluno (`_lab/index.html`)
+     reconhece o fim de DOIS jeitos, e a folha viva escapava dos dois:
+       1. A ESPIADA — ela olha dentro do quadro e procura a MEDALHA do fim pela
+          CLASSE `.medal`. A folha viva chama a dela de `#medalha`, por id, e
+          portanto a espiada nunca a via;
+       2. O AVISO — o motor manda `postMessage({eduverse:"terminou"})` ao chegar
+          no fim. A folha viva não mandava nada, porque nasceu sem essa peça.
+     Agora ela manda o aviso aqui, e a medalha ganhou também a classe `medal`
+     no HTML: dois caminhos, um cobrindo o buraco do outro, que é a razão pela
+     qual o laboratório tem os dois.
+
+     ⚠️ FORA DO LABORATÓRIO NÃO HÁ PAI NENHUM ESCUTANDO e a linha não faz nada —
+     por isso ela é segura em qualquer lugar (em casa, no celular, aberta
+     direto pelo link). O `try` existe para o caso de a janela de cima ser de
+     outro domínio, quando o navegador recusa a leitura de `window.parent`. */
+  try{ if(window.parent && window.parent !== window)
+         window.parent.postMessage({eduverse: "terminou"}, "*"); }catch(e){}
   calar();
   /* quantas folhas ela chegou a tocar, e quantas ficaram para depois */
   var abertas = 0, naoAbertas = [], pp;
@@ -1196,7 +1311,14 @@ function abreMenuProf(){
       cx.appendChild(b);
     };
     mk("Capa", 0);
-    for(var k = 1; k <= 10; k++) mk(k + ". " + NOMES[k - 1], k);
+/* ⚠️ ERA `k <= 10` FIXO, e isso mentia sobre o tamanho do caderno.
+       O Marcos abriu o menu do professor da Horta do Vovô (21 folhas),
+       viu dez e perguntou: *"a horta só tem 10 páginas?"*. O caderno
+       inteiro funciona — MEDIDO, o jogador fecha as 21 de 21 —, mas
+       quem confere pelo menu não tem como saber disso. O dez é resto de
+       quando os cadernos desta casa tinham dez folhas; o piso hoje é 20.
+       Quem manda no menu é o NOMES, que é a lista de verdade. */
+    for(var k = 1; k <= NOMES.length; k++) mk(k + ". " + NOMES[k - 1], k);
   }
   calar(); document.getElementById("menuProf").className = "aberto";
 }
