@@ -793,7 +793,7 @@ function confereSil(){
      tinha a tecla. Ela acertava de cabeça e não conseguia responder.
      (As três entraram no alfabeto oficial do português em 2009.)
      Quem pegou foi o `_qa/joga_folha.js`: um item de cinco não fechava. */
-  var letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZÇÃ".split("");
+  var letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZÁÀÂÃÉÊÍÓÔÕÚÜÇ".split("");
   letras.forEach(function(L){
     var b = el("button", null, L);
     b.setAttribute("aria-label", "Letra " + L);
@@ -809,7 +809,7 @@ document.addEventListener("keydown", function(ev){
   if(!ATIVA) return;
   if(document.activeElement && document.activeElement.id === "nomeIn") return;
   var k = (ev.key || "").toUpperCase();
-  if(k.length === 1 && "ABCDEFGHIJKLMNOPQRSTUVWXYZÇÃ".indexOf(k) > -1){ ev.preventDefault(); digita(k); }
+  if(k.length === 1 && "ABCDEFGHIJKLMNOPQRSTUVWXYZÁÀÂÃÉÊÍÓÔÕÚÜÇ".indexOf(k) > -1){ ev.preventDefault(); digita(k); }
   else if(ev.key === "Backspace"){ ev.preventDefault(); digita("ap"); }
   else if(ev.key === "Enter"){ ev.preventDefault(); digita("ok"); }
   else if(ev.key === "Escape"){ fechaAtiva(); }
