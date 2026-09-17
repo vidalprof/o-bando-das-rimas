@@ -648,6 +648,20 @@ body.comtec{padding-bottom:460px;padding-bottom:var(--tech,460px)}
 #dossie #dsFechar{margin-top:10px;min-height:46px}
 .bdossie{display:block;width:100%;margin-top:10px;min-height:46px}
 /*</dossie-css>*/
+
+/* ---- o campo que chama o TECLADO DO APARELHO (17/set/2026) ----
+   ⚠️ 1 px e transparente, mas VISIVEL para o navegador: `display:none`,
+      `visibility:hidden` e `hidden` tiram o foco, e sem foco o teclado do
+      celular nao abre. `opacity:0` mantem o foco e some da tela.
+   ⚠️ `font-size:16px` de proposito: abaixo disso o Safari do iPhone DA ZOOM na
+      pagina inteira quando o campo recebe foco. */
+#tecReal{position:fixed;left:-2px;bottom:0;width:1px;height:1px;opacity:0;
+  border:0;padding:0;margin:0;font-size:16px;z-index:1}
+.tecdica{position:fixed;left:50%;transform:translateX(-50%);bottom:10px;z-index:32;
+  background:#2b2440;color:#fff;font-weight:800;font-size:clamp(13px,3.6vw,16px);
+  padding:10px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.28);
+  display:none;max-width:92vw;text-align:center}
+.tecdica.aberta{display:block}
 </style></head><body>
 
 <div id="topo">
@@ -705,10 +719,15 @@ body.comtec{padding-bottom:460px;padding-bottom:var(--tech,460px)}
   </div>
 </div>
 
-<div id="teclado" aria-label="Teclado de letras">
-  <div class="dica" id="tkDica">Escreva a sílaba</div>
-  <div id="tk"></div>
-</div>
+<!-- ⌨️ O TECLADO DESENHADO SAIU (Marcos, 17/set/2026): *"remover o teclado das
+     atividades, deixar so a digitacao pelo teclado real"*. No lugar dele fica
+     ESTE CAMPO, que a crianca nunca ve mas que recebe FOCO — e e o foco que faz
+     o teclado DO APARELHO abrir no celular e no tablet.
+     ⚠️ Ele nao pode ser `display:none` nem `hidden`: campo escondido NAO recebe
+        foco, e sem foco o teclado do aparelho nao abre. -->
+<label for="tecReal" id="tecDica" class="tecdica" aria-live="polite"></label>
+<input id="tecReal" type="text" autocomplete="off" autocorrect="off"
+       autocapitalize="characters" spellcheck="false" aria-label="Escreva aqui">
 <div id="confete" aria-hidden="true"></div>
 
 <script>

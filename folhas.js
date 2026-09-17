@@ -1,3 +1,12 @@
+/* ⌨️ as duas ajudantes do campo invisivel (17/set/2026) */
+function _dicaTec(txt){
+  var e = document.getElementById("tecDica");
+  if(e){ e.textContent = txt; e.className = "tecdica aberta"; }
+}
+function _fechaTec(){
+  var t = document.getElementById("tecReal"); if(t) t.blur();
+  var e = document.getElementById("tecDica"); if(e) e.className = "tecdica";
+}
 /* ============================================================
    A FÁBRICA DE PALAVRAS — as dez folhas.
 
@@ -510,13 +519,15 @@ function f9(d, pi){
       registra(id2, pi, it2.c);
       var q = el("div", "sq vaga larga" + (ST.resp[id2] ? " ok" : ""), ST.resp[id2] ? it2.c : "");
       q.id = id2; q.setAttribute("role", "button"); q.setAttribute("tabindex", "0");
-      q.setAttribute("data-qa", "vaga-" + id2);
+      /* ⌨️ `esc-`, que e o contrato do jogador da banca: com `vaga-` ele
+           dizia "nao conheco a peca" e a digitacao nunca era medida. */
+        q.setAttribute("data-qa", "esc-" + id2);
       q.setAttribute("aria-label", "Escreva a palavra que rima com " + esc(it2.f));
       q.onclick = function(){
         if(ST.resp[id2]) return;
         sPasso();
         ativa(q, it2.c, id2, "certo" + pi + "_" + it2.f, "dica" + pi + "_" + it2.f);
-        document.getElementById("tkDica").textContent = "Escreva a palavra que rima";
+        _dicaTec("Escreva a palavra que rima");
       };
       q.onkeydown = function(ev){ if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); q.onclick(); } };
       var lin = el("div", "linhaop"); lin.appendChild(q); box2.appendChild(lin);
@@ -716,33 +727,11 @@ function rolaParaCruz(){
     cs.push(_ativa.q);
   }
   if(!cs.length) return;
-  var tkel = document.getElementById("teclado");
-  if(!tkel || tkel.className.indexOf("aberto") < 0) return;
-  var tk = tkel.getBoundingClientRect(), topo = 56, pe = tk.top - 10;
-  /* ⚠️ A RESERVA DE ROLAGEM SAI DA ALTURA REAL DO TECLADO, e não de um
-     número fixo. Ela nasceu como `padding-bottom:460px` no `comtec`, que
-     é certo para o teclado de LETRAS (336 px medidos a 360x640, 41
-     teclas) e exagerado para o de NÚMEROS (160 px, 12 teclas): sobravam
-     300 px de vazio para a criança rolar à toa enquanto digita. Como o
-     `comtec` sai da tag `body` ao fechar, a variável pode ficar guardada
-     sem fazer mal nenhum. */
-  document.documentElement.style.setProperty("--tech", Math.ceil(tk.height + 40) + "px");
-  if(pe <= topo) return;
-  var cima = 1e9, baixo = -1e9;
-  for(i = 0; i < cs.length; i++){
-    var r = cs[i].getBoundingClientRect();
-    if(r.top < cima) cima = r.top;
-    if(r.bottom > baixo) baixo = r.bottom;
-  }
-  var d = 0;
-  if(baixo - cima <= pe - topo){
-    if(baixo > pe) d = baixo - pe;
-    if(cima - d < topo) d = cima - topo;
-  } else {
-    var at = cs[Math.min(andando, cs.length - 1)].getBoundingClientRect();
-    d = at.top - (topo + (pe - topo) / 2 - at.height / 2);
-  }
-  if(Math.abs(d) > 2) window.scrollBy(0, d);
+  /* ⌨️ sem teclado desenhado nao ha altura para descontar; mas no celular o
+     teclado DO APARELHO cobre a metade de baixo do mesmo jeito. Entao leva-se
+     a casinha para o MEIO — serve nos dois casos e nao mede nada. */
+  try{ cs[0].scrollIntoView({block: "center", behavior: "smooth"}); }
+  catch(e){ try{ cs[0].scrollIntoView(); }catch(e2){} }
 }
 function montaLigar(caixa, pi, tag, pares, pagina){
   var box = el("div", "ligar"), ce = el("div", "col"), cd = el("div", "col");
@@ -842,20 +831,23 @@ function montaLigar(caixa, pi, tag, pares, pagina){
   ATIVA = {q: q, val: "", certa: certa, id: id, fc: fc, fd: fd};
   q.className = "sq vaga ativa";
   q.innerHTML = '<span class="v"></span><span class="cursor"></span>';
-  document.getElementById("teclado").className = "aberto";
+  /* ⌨️ so o teclado REAL: da-se FOCO no campo invisivel, e e o foco que faz
+     o teclado DO APARELHO subir no celular. No PC nada sobe. */
+  var _tr = document.getElementById("tecReal");
+  if(_tr){ _tr.value = ""; try{ _tr.focus({preventScroll: true}); }catch(e){ _tr.focus(); } }
   /* ⚠️ ROLAR A PALAVRA PARA CIMA DO TECLADO. Sem isto a criança escreve às
      cegas: o teclado é fixo no pé da tela e a grade fica embaixo dele (medido
      em 360x640: a grade inteira por baixo). O `comtec` dá chão para a página
      poder rolar; o resto é levar a primeira casinha para a faixa que sobra. */
   document.body.className = (document.body.className.replace(/ ?comtec/, "") + " comtec").replace(/^ /, "");
   setTimeout(rolaParaCruz, 60);
-  document.getElementById("tkDica").textContent = "Escreva a sílaba que falta";
+  _dicaTec("Escreva a sílaba que falta");
   falar("escreva");
 }
 function fechaAtiva(){
   if(!ATIVA) return;
   if(!ST.resp[ATIVA.id]){ ATIVA.q.className = "sq vaga"; ATIVA.q.textContent = ""; }
-  ATIVA = null; document.getElementById("teclado").className = "";
+  ATIVA = null; _fechaTec();
   document.body.className = document.body.className.replace(/ ?comtec/, "");
 }
 function digita(ch){
@@ -863,7 +855,20 @@ function digita(ch){
   sTecla();
   if(ch === "ap") ATIVA.val = ATIVA.val.slice(0, -1);
   else if(ch === "ok") return confereSil();
-  else { if(ATIVA.val.length >= 4) return; ATIVA.val += ch; }
+  /* ⚠️⚠️ O TETO ERA 4 LETRAS, FIXO — e isso tornava IMPOSSIVEL escrever a
+     resposta em toda palavra mais comprida. Medido em 17/set/2026 no `_rima1`,
+     folha 9 ("Escreva a palavra que rima"): as respostas incluem PANELA (6) e
+     ESTRELA (7). A crianca escrevia PANE e o app parava de aceitar letra. Ela
+     nao tinha como acertar, e a folha ficava travada para sempre.
+     Ninguem tinha visto porque o jogador da banca nao media esta folha: a
+     quadra se anunciava como `vaga-` e ele nao conhecia a peca.
+     O teto agora e o TAMANHO DA RESPOSTA. O 4 fica so de reserva, para o caso
+     de a resposta nao ter chegado. */
+  else {
+    var _teto = (ATIVA.certa && ATIVA.certa.length) ? ATIVA.certa.length : 4;
+    if(ATIVA.val.length >= _teto) return;
+    ATIVA.val += ch;
+  }
   var v = ATIVA.q.querySelector(".v"); if(v) v.textContent = ATIVA.val;
   if(ATIVA.val.length >= ATIVA.certa.length) setTimeout(confereSil, 380);
 }
@@ -872,7 +877,7 @@ function confereSil(){
   var A = ATIVA;
   if(A.val === A.certa){
     A.q.className = "sq ok"; A.q.textContent = A.certa;
-    ATIVA = null; document.getElementById("teclado").className = "";
+    ATIVA = null; _fechaTec();
     document.body.className = document.body.className.replace(/ ?comtec/, "");
     acertou(A.id, A.fc);
     var it = A.q.parentNode.parentNode; if(it) it.className = "item feito";
@@ -881,29 +886,39 @@ function confereSil(){
     errou(A.id, A.fd);
   }
 }
+/* ⌨️ AQUI MORAVA O CONSTRUTOR DO TECLADO DESENHADO — 39 teclas presas no pe da
+   tela. Saiu em 17/set/2026, por ordem do Marcos.
+   ⚠️ O QUE NAO SUMIU JUNTO: a `digita()` continua sendo o unico caminho de
+      escrita, alimentada por DOIS lugares — o `keydown` do documento (teclado
+      de verdade, no PC) e o `input` do campo invisivel (teclado do aparelho, no
+      celular). Sem o segundo, quem abre no telefone fica sem como escrever. */
 (function(){
-  var tk = document.getElementById("tk");
-  /* ⚠️ O K, O W E O Y ESTAVAM DE FORA — e num caderno cujo assunto É o
-     alfabeto de 26 letras isso não é detalhe: o pote da folha de digitar
-     sorteia as 26, e em três delas a criança batia num teclado que não
-     tinha a tecla. Ela acertava de cabeça e não conseguia responder.
-     (As três entraram no alfabeto oficial do português em 2009.)
-     Quem pegou foi o `_qa/joga_folha.js`: um item de cinco não fechava. */
-  var letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZÁÀÂÃÉÊÍÓÔÕÚÜÇ".split("");
-  letras.forEach(function(L){
-    var b = el("button", null, L);
-    b.setAttribute("aria-label", "Letra " + L);
-    b.onclick = function(){ digita(L); };
-    tk.appendChild(b);
+  var tr = document.getElementById("tecReal");
+  if(!tr) return;
+  /* o celular manda `input`, nao `keydown` com a letra — em muitos teclados
+     Android o `key` chega como "Unidentified". Entao a letra se le do VALOR. */
+  tr.addEventListener("input", function(){
+    var v = tr.value || "";
+    tr.value = "";
+    if(!ATIVA) return;
+    for(var i = 0; i < v.length; i++){
+      var k = v.charAt(i).toUpperCase();
+      if("ABCDEFGHIJKLMNOPQRSTUVWXYZ\u00c1\u00c0\u00c2\u00c3\u00c9\u00ca\u00cd\u00d3\u00d4\u00d5\u00da\u00dc\u00c7".indexOf(k) > -1) digita(k);
+    }
   });
-  var ap = el("button", "ap", "apagar"); ap.setAttribute("aria-label", "Apagar");
-  ap.onclick = function(){ digita("ap"); }; tk.appendChild(ap);
-  var ok = el("button", "ok", "OK"); ok.setAttribute("aria-label", "Confirmar");
-  ok.onclick = function(){ digita("ok"); }; tk.appendChild(ok);
+  tr.addEventListener("keydown", function(ev){
+    if(!ATIVA) return;
+    if(ev.key === "Backspace"){ ev.preventDefault(); digita("ap"); }
+    else if(ev.key === "Enter"){ ev.preventDefault(); digita("ok"); }
+    else if(ev.key === "Escape"){ ev.preventDefault(); fechaAtiva(); }
+  });
 })();
 document.addEventListener("keydown", function(ev){
   if(!ATIVA) return;
   if(document.activeElement && document.activeElement.id === "nomeIn") return;
+  /* ⚠️ Com o campo invisivel em foco a letra chega pelo `input` DELE. Se este
+     ouvinte tambem escrevesse, cada tecla sairia DOBRADA. */
+  if(document.activeElement && document.activeElement.id === "tecReal") return;
   var k = (ev.key || "").toUpperCase();
   if(k.length === 1 && "ABCDEFGHIJKLMNOPQRSTUVWXYZÁÀÂÃÉÊÍÓÔÕÚÜÇ".indexOf(k) > -1){ ev.preventDefault(); digita(k); }
   else if(ev.key === "Backspace"){ ev.preventDefault(); digita("ap"); }
