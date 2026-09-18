@@ -99,25 +99,23 @@ function monta(){
    lado a lado, com o sinal de igual entre eles. O movimento conta a atividade:
    cada par entra junto, porque rima é coisa de dois. */
 function f0(d){
-  var c = el("div", "capa"), nome = "O BANDO DAS RIMAS", k, letras = "";
-  for(k = 0; k < nome.length; k++){
-    var ch = nome.charAt(k);
-    letras += ch === " " ? '<span class="esp"></span>'
-      : '<span class="lt" style="animation-delay:' + (0.05 * k).toFixed(2) + 's">' + ch + '</span>';
-  }
-  var PARES = [["gato", "pato"], ["bola", "mola"], ["boca", "foca"]], cena = "";
-  PARES.forEach(function(P, i){
-    cena += '<span class="dupla" style="animation-delay:' + (0.5 + i * 0.3).toFixed(2) + 's">' +
-            img(P[0]) + '<i class="igual"></i>' + img(P[1]) + '</span>';
+  /* CAPA COM IDENTIDADE PRÓPRIA — gerada por _padrao/identidade_capa.py (editar lá).
+     Cena: o bando: as rimas penduradas em pares, balançando. O título entra letra a letra (pula), palavra por palavra
+     (nowrap, para não quebrar no meio); as figuras são as do próprio caderno. */
+  var c = el("div", "capa"), nome = "O BANDO DAS RIMAS", k, letras = "", pos = 0;
+  var V = typeof VIMG !== "undefined" ? VIMG : 2;
+  nome.split(" ").forEach(function(pal, w){
+    var s = "";
+    for(k = 0; k < pal.length; k++, pos++){
+      s += '<span class="lt" style="animation-delay:' + (0.05 * pos).toFixed(2) + 's">' + pal.charAt(k) + '</span>';
+    }
+    pos++;
+    letras += (w ? '<span class="cpesp"></span>' : '') + '<span class="cptpal">' + s + '</span>';
   });
   c.innerHTML =
-    '<div class="ceu"><i class="nv n1"></i><i class="nv n2"></i><i class="nv n3"></i></div>' +
-    '<h1 class="titu">' + letras + '</h1>' +
+    '<div class="ceu"></div>' + '<h1 class="titu">' + letras + '</h1>' +
     '<div class="sub">Alfabetização &middot; 1º ano &middot; dez folhas de rima</div>' +
-    '<div class="esteira">' +
-      '<div class="cena">' + cena + '</div>' +
-      '<div class="cinta"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>' +
-    '</div>' +
+    '<div class="cpbarra"></div><div class="cena">' + '<div class="it" style="animation-delay:0.00s">' + '<i class="fio"></i><img class="capfig" draggable="false" src="img/ri_gato.png?v=' + V + '" alt="">' + '<span class="rt">GATO</span>' + '</div>' + '<div class="it" style="animation-delay:0.35s">' + '<i class="fio"></i><img class="capfig" draggable="false" src="img/ri_pato.png?v=' + V + '" alt="">' + '<span class="rt">PATO</span>' + '</div>' + '<div class="it" style="animation-delay:0.70s">' + '<i class="fio"></i><img class="capfig" draggable="false" src="img/ri_bola.png?v=' + V + '" alt="">' + '<span class="rt">BOLA</span>' + '</div>' + '<div class="it" style="animation-delay:1.05s">' + '<i class="fio"></i><img class="capfig" draggable="false" src="img/ri_cebola.png?v=' + V + '" alt="">' + '<span class="rt">CEBOLA</span>' + '</div>' + '</div>' + '' +
     '<div class="chamada">Escreva o seu nome ali embaixo e toque em <b>Começar</b>.</div>';
   d.appendChild(c);
 }
