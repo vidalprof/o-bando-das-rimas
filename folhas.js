@@ -45,8 +45,8 @@ function aoAbrir(d, fn){ if(!d._aoAbrir) d._aoAbrir = []; d._aoAbrir.push(fn); }
    ⚠️ O desenho do alto-falante é CSS puro — caixinha + triângulo + duas ondas
    feitas com borda arredondada. Nada de emoji (vira quadradinho nos PCs da
    escola) e nada de SVG (ordem dele). */
-function botaoSom(rot, aoTocar){
-  var b = el("button", "som");
+function botaoSom(rot, aoTocar, cls){
+  var b = el("button", cls || "som");
   b.innerHTML = '<i class="cone"></i><i class="onda o1"></i><i class="onda o2"></i>';
   b.setAttribute("aria-label", rot || "Ouvir");
   b.onclick = function(ev){ ev.stopPropagation(); sPasso(); aoTocar(); };
@@ -148,7 +148,25 @@ function opcoes(pai, pi, id, lista, certa, cls, falaCerto, falaDica, aoAcertar, 
     b.setAttribute("aria-label", o.aria || o.v);
     b.onclick = function(){ if(b._arrastou){ b._arrastou = false; return; } responde(o, b); };
     if(soltarEm) puxavel(b, soltarEm, function(){ responde(o, b); });
-    box.appendChild(b);
+    /* ⚠️ O ALTO-FALANTE DA RESPOSTA, e ele é DISCRETO e vem ANTES da escolha.
+       Pergunta do Marcos (20/set/2026): *"a atividade tem áudio para ajudar os
+       que não sabem ler? O alto-falante discreto para clicar caso o estudante
+       queira ouvir"*. A resposta era NÃO: a opção tinha `fala`, mas o motor só
+       a tocava DEPOIS do clique — ou seja, a criança tinha de ESCOLHER para
+       ouvir, e aí já tinha respondido. O portão `1o` media a metade errada
+       (cobrava o campo `fala` existir, não a criança poder ouvir antes).
+       ⚠️ Botão IRMÃO, nunca dentro do outro: botão dentro de botão é HTML
+       inválido e o clique vaza para a resposta. O `botaoSom` já faz
+       `stopPropagation`. */
+    if(o.fala){
+      var w = el("div", "opw" + (cls && cls.indexOf("frase") > -1 ? " larga" : ""));
+      w.appendChild(b);
+      w.appendChild(botaoSom("Ouvir esta resposta",
+        (function(f){ return function(){ falar(f); }; })(o.fala), "som somop"));
+      box.appendChild(w);
+    } else {
+      box.appendChild(b);
+    }
   });
   pai.appendChild(box);
 }
@@ -528,7 +546,7 @@ function f9(d, pi){
         _dicaTec("Escreva a palavra que rima");
       };
       q.onkeydown = function(ev){ if(ev.key === "Enter" || ev.key === " "){ ev.preventDefault(); q.onclick(); } };
-      var lin = el("div", "linhaop"); lin.appendChild(q); box2.appendChild(lin);
+      var lin = el("div", "");   /* classe sem regra de CSS nenhuma (portao 4): o <div> fica, o nome morto sai */  lin.appendChild(q); box2.appendChild(lin);
     })(it, id, box);
     fechaItem(d, box, id, 0);
   }
