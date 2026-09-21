@@ -1857,13 +1857,38 @@ function sil(w){ return PAL[w] ? PAL[w][1] : [w.toUpperCase()]; }
    que no repositório já estava limpa. Não adianta consertar o desenho se a
    criança continua recebendo o antigo: subir o VIMG obriga o navegador a buscar
    tudo de novo. REGRA: mexeu em figura, sobe o VIMG no mesmo commit. */
-var VIMG = 2;
+var VIMG = 3;
 /* ⚠️⚠️ `draggable="false"` NÃO É DETALHE (set/2026, três horas de caça).
    Toda imagem é arrastável de fábrica no navegador. Quando a criança apertava
    a figura e puxava, o Chrome começava o SEU arrasto nativo do `<img>` e
    disparava um `pointercancel` — o nosso arrasto morria no primeiro milímetro,
    sem erro nenhum na tela. Com isto desligado, o gesto é nosso. */
-function img(w, cls){ return '<img class="' + (cls || "fig") + '" draggable="false" src="img/ri_' + w + '.png?v=' + VIMG + '" alt="' + esc(w) + '">'; }
+function img(w, cls){ return '<img class="' + (cls || "fig") + '" draggable="false" onload="naoAmplia(this)" src="img/ri_' + w + '.png?v=' + VIMG + '" alt="' + esc(w) + '">'; }
+/* ⭐ A FIGURA NUNCA É MOSTRADA MAIOR QUE O PRÓPRIO ARQUIVO (regra do Marcos,
+   14/set/2026: *"nunca ampliar, nunca gerar"*). O CSS da peça dá o TETO (o
+   `clamp`); o arquivo dá o teto DE VERDADE. Sem isto um recorte de 71 px de
+   altura saía a 104 px e borrado, e o portão de leiaute reprovava acima de
+   1,35x. Este guarda já existia no esqueleto e nos cadernos novos; os antigos
+   nasceram sem ele e foram ao ar assim — medido em 21/set/2026, nove cadernos
+   mostravam a mesma faca de 260x71 px esticada até 1,80x. */
+function naoAmplia(im){
+  if(!im || !im.naturalWidth) return;
+  /* ⚠️⚠️ DUAS LINHAS PARA CADA LADO, E AS DUAS SÃO NECESSÁRIAS (21/set/2026).
+     · Por que os DOIS lados: há peça com a altura mandando (`height:clamp(),
+       width:auto`) e peça com a largura mandando (`width:clamp(), height:auto`).
+       Segurar só a altura numa peça do segundo tipo quebra a proporção e a figura
+       sai ESTICADA — medido no _sinon2, folha 5, até 71%.
+     · Por que o `min(100%, ...)`: `max-width` em ESTILO DE LINHA vence o
+       `max-width:100%` da folha de estilo — vence por ser de linha, não por ser
+       menor. Com o valor cru, uma figura larga deixava de encolher e ESTOURAVA a
+       lateral da tela no celular (medido no _casa1, folha 19).
+     · A linha crua vem ANTES de propósito: navegador velho que não entende
+       `min()` recusa a segunda e fica com a primeira, que é o que já está no ar. */
+  im.style.maxWidth = im.naturalWidth + "px";
+  im.style.maxWidth = "min(100%, " + im.naturalWidth + "px)";
+  im.style.maxHeight = im.naturalHeight + "px";
+}
+
 
 /* ---------- estado ---------- */
 var ST = {pag: 0, nome: "", folha: null, resp: {}, lig: {}, tent: {}, prontas: {}, inicio: 0};
@@ -2119,5 +2144,5 @@ function novaFolha(){
   </div>
 </div>
 <!--</dossie-html>-->
-<script src="folhas.js?v=8c34207cbb"></script>
+<script src="folhas.js?v=5b8121e327"></script>
 </body></html>
